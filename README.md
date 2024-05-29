@@ -186,11 +186,46 @@ Signature: 3336894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 
 ## Коды ошибок
 
-| Код ошибки | Сообщение                          | HTTP статус код |
-|------------|------------------------------------|-----------------|
-| 10000      | unauthorized                       | 401             |
-| 20000      | wrong input                        | 400             |
-| 20001      | can't bind body to request model   | 422             |
+| Код ошибки | Сообщение                               | HTTP статус коды |
+|------------|----------------------------------------|------------------|
+| 10000      | unauthorized                           | 401              |
+| 20000      | wrong input                            | 400              |
+| 20001      | can't bind body to request model       | 422              |
+| 20002      | can't bind query parameters            | 422              |
+| 20003      | failed to parse key                    | 422              |
+| 20004      | signature header value missing or malformed | 400           |
+| 20005      | public-Key header value missing or malformed | 400         |
+| 20006      | timestamp header value missing or outdated | 400          |
+| 20012      | invalid query params                   | 400              |
+| 20013      | empty receipt                          | 400              |
+| 20014      | large file size                        | 400              |
+| 20015      | conflict                               | 409              |
+| 20016      | empty trackerID                        | 400              |
+| 20200      | token not found                        | 404              |
+| 30000      | forbidden                              | 403              |
+| 30001      | no access to requested session         | 403              |
+| 30002      | requested sessions has expired        | 403              |
+| 30003      | user doesn't exists                   | 403              |
+| 30004      | zero balance                           | 403              |
+| 30005      | not enough balance                     | 402              |
+| 30006      | amount less than min                   | 400              |
+| 30007      | amount greater than max                | 400              |
+| 40000      | internal error                         | 500              |
+| 60000      | ticker doesnt exists                   | 400              |
+| 60001      | ticker type doesnt exists              | 400              |
+| 60002      | invalid status                         | 400              |
+| 60003      | empty Public-Key                       | 401              |
+| 60004      | empty Expires                          | 401              |
+| 60005      | empty Signature                        | 401              |
+| 60006      | invalid Signature                      | 401              |
+| 60007      | request timeout                        | 408              |
+| 60008      | invalid Public-Key                     | 400              |
+| 60009      | empty clientID                         | 400              |
+| 60010      | clientID already exists                | 409              |
+| 60011      | payment doesn't exists                 | 404              |
+| 60012      | payment is finalized                   | 409              |
+| 60013      | type doesnt exists                     | 400              |
+| 60014      | bank doesnt exists                     | 400              |
 
 
 
