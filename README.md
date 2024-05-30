@@ -11,7 +11,7 @@
 ### Генерация Подписи
 
 Подпись генерируется с использованием алгоритма HMAC-SHA512. Ниже приведена пример функции генерирования подписи (Signature) на разных языках:
-
+#### Golang
 ```go
 func GenerateSignature(secret string, message string) string {
     mac := hmac.New(sha512.New, []byte(secret))
@@ -19,7 +19,7 @@ func GenerateSignature(secret string, message string) string {
     return hex.EncodeToString(mac.Sum(nil))
 }
 ```
-
+#### Python
 ```python
 import hmac
 import hashlib
@@ -28,7 +28,7 @@ def generate_signature(secret, message):
     mac = hmac.new(secret.encode(), message.encode(), hashlib.sha512)
     return mac.hexdigest()
 ```
-
+#### JavaScript
 ```javaScript
 const crypto = require('crypto');
 
@@ -38,7 +38,7 @@ function generateSignature(secret, message) {
                  .digest('hex');
 }
 ```
-
+#### PHP
 ```php
 function generate_signature($secret, $message) {
     return hash_hmac('sha512', $message, $secret);
@@ -58,6 +58,7 @@ function generate_signature($secret, $message) {
 - **body**: тело запроса, в случае GET оно пустое (nil/null), обязательно чтобы JSON ключи шли в алфавитном порядке!!!
 #### <span style="color:red"> *Обязательно JSON ключи в теле (body) запроса должны идти в алфавитном порядке!!!* </span>
 
+#### Golang
 ```go
 func generateMessage(r *resty.Request, body []byte, exp, secret string) (string, error) {
 	message := r.URL
@@ -81,7 +82,7 @@ func generateMessage(r *resty.Request, body []byte, exp, secret string) (string,
 	return GenerateSignature(secret, message+exp), nil
 }
 ```
-
+#### Python
 ```python
 import json
 from urllib.parse import urlencode
@@ -97,7 +98,7 @@ def generate_message(request, body, exp, secret):
             message += json_body
     return generate_signature(secret, message + exp)
 ```
-
+#### JavaScript
 ```javaScript
 function generateMessage(request, body, exp, secret) {
     let message = request.url;
@@ -116,7 +117,7 @@ function generateMessage(request, body, exp, secret) {
     return generateSignature(secret, message + exp);
 }
 ```
-
+#### PHP
 ```php
 function generate_message($request, $body, $exp, $secret) {
     $message = $request['url'];
