@@ -19,6 +19,7 @@ func GenerateSignature(secret string, message string) string {
     return hex.EncodeToString(mac.Sum(nil))
 }
 ```
+
 #### Python
 ```python
 import hmac
@@ -28,6 +29,7 @@ def generate_signature(secret, message):
     mac = hmac.new(secret.encode(), message.encode(), hashlib.sha512)
     return mac.hexdigest()
 ```
+
 #### JavaScript
 ```javaScript
 const crypto = require('crypto');
@@ -38,6 +40,7 @@ function generateSignature(secret, message) {
                  .digest('hex');
 }
 ```
+
 #### PHP
 ```php
 function generate_signature($secret, $message) {
@@ -82,6 +85,7 @@ func generateMessage(r *resty.Request, body []byte, exp, secret string) (string,
 	return GenerateSignature(secret, message+exp), nil
 }
 ```
+
 #### Python
 ```python
 import json
@@ -98,6 +102,7 @@ def generate_message(request, body, exp, secret):
             message += json_body
     return generate_signature(secret, message + exp)
 ```
+
 #### JavaScript
 ```javaScript
 function generateMessage(request, body, exp, secret) {
@@ -117,6 +122,7 @@ function generateMessage(request, body, exp, secret) {
     return generateSignature(secret, message + exp);
 }
 ```
+
 #### PHP
 ```php
 function generate_message($request, $body, $exp, $secret) {
