@@ -260,6 +260,7 @@ Signature: 2216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 - **frozen**: замороженный баланс
 
 
+
 ### Получение актуальных ставок (GET)
 ```http
 GET /api/v1/account/commission HTTP/1.1
@@ -293,6 +294,150 @@ Signature: 4216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 - **percentCommissionIn**: процентная комиссия на пополнения
 - **percentCommissionOut**: процентная комиссия на выплату
 
+
+
+### Создание пополнения, используются все банки (POST)
+```http
+POST /api/v1/payment HTTP/1.1
+Host: pay-finity.com
+Content-Type: application/json
+Expires: 1717025205
+Public-Key: testPublicKey
+Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490cfc8ff180e7575c5dbbc643ab3842ca05ae8bbb9f08e180e757lk4nm
+
+{
+  "clientID": "test",
+  "currency": "RUB",
+  "callbackURL": "https://test.com/test1",
+  "description": "test payment",
+  "amount": "1000"
+}
+```
+
+Струтура тела запроса:
+- **clientID**: уникальный идентификатор транзакции в вашей системе (обязательный)
+- **currency**: направление, всегда RUB  (обязательный)
+- **amount**: сумма транзакции  (обязательный)
+- **callbackURL**: ваш URL, на который будет приходить оповещение об изменении статуса транзакции (необязательный)
+- **description**: описание транзакции (необязательный)
+
+#### Пример успешного ответа
+```json
+{
+  "success": true,
+  "data": {
+    "trackerID": "23w324nn3754aa7aaa0ffe1fe154a64119bfc2f18804809b7c207d81a2aab27",
+    "currency": "RUB",
+    "amount": "1000",
+    "cardNumber": "2200188977146220",
+    "bank": "ALFA",
+    "SBPPhoneNumber": "+79963614478",
+    "holder": "Ivanov Ivan"
+  }
+}
+```
+Струтура ответа:
+- **trackerID**: уникальный идентификатор транзакции в нашей стороне
+- **currency**: направление, всегда RUB
+- **cardNumber**: номер карты, на который нужно совершить перевод средств
+- **bank**: банк на который нужно совершить перевод средств
+- **updatedTime**: время обновления транзакции
+- **SBPPhoneNumber**: номер телефона для перевода средств через СБП
+- **holder**: ФИО держателя карты
+
+
+
+### Создание выплаты, используются SBER и TINKOFF (POST)
+```http
+POST /api/v1/payout HTTP/1.1
+Host: pay-finity.com
+Content-Type: application/json
+Expires: 1717025207
+Public-Key: testPublicKey
+Signature: nnd5721jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490cfc8ff180e7575c5dbbc643ab3842ca05ae8bbksadd234pqn144
+
+{
+  "clientID": "test2",
+  "bank": "TINKOFF",
+  "type": "CARD",
+  "callbackURL": "http://test.com/test2",
+  "description": "test payout",
+  "amount": "5500",
+  "receiver": "2200555555555555"
+}
+```
+
+Струтура тела запроса:
+- **clientID**: уникальный идентификатор транзакции в вашей системе (обязательный)
+- **bank**: банк, на который вы хотите вывести средства, доступны только SBER и TINKOFF (обязательный)
+- **type**: тип перевода, доступны только CARD и SBP (обязательный)
+- **amount**: сумма транзакции  (обязательный)
+- **receiver**: номер карты, на которую вы хотите вывести средства (обязательный)
+- **callbackURL**: ваш URL, на который будет приходить оповещение об изменении статуса транзакции (необязательный)
+- **description**: описание транзакции (необязательный)
+
+#### Пример успешного ответа
+```json
+{
+  "success": true,
+  "data": {
+    "trackerID": "llasdq2nn3754aa7aaa0ffe1fe154a64119bfc2f18804809b7c207d81a2aazkl",
+    "currency": "RUB",
+    "amount": "1100",
+    "commission": "100",
+    "status": "PENDING"
+  }
+}
+```
+Струтура ответа:
+- **trackerID**: уникальный идентификатор транзакции в нашей стороне
+- **currency**: направление, всегда RUB
+- **amount**: сумма выплата с учетом комиссии
+- **commission**: комиссия за выплату
+- **status**: статус транзакции
+
+
+
+### Получение транзакции по trackerID (GET)
+```http
+GET /api/v1/account/transaction?trackerID=8fd63cc6614279942e15075cc6eb0ad05d430c242a750b140db1446f7749f8e1 HTTP/1.1
+Host: pay-finity.com
+Content-Type: application/json
+Expires: 1717025201
+Public-Key: testPublicKey
+Signature: 234jjl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490cfc8ff180e7575c5dbbc643ab3842ca05ae8bbb9f08e180e7575c5dba2
+```
+
+#### Пример успешного ответа
+```json
+{
+  "success": true,
+  "data": {
+	"clientID": "1wswssxfxxf22qqffs",
+	"trackerID": "8fd63cc6614279942e15075cc6eb0ad05d430c242a750b140db1446f7749f8e1",
+	"type": "OUT",
+	"currency": "RUB",
+	"status": "SUCCESS",
+	"createdTime": "2024-05-15T23:55:43.035172Z",
+	"updatedTime": "2024-05-16T03:17:37.331142+03:00",
+	"amount": "6802",
+	"commission": "340.1"
+  }
+}
+```
+Струтура transactions:
+- **clientID**: уникальный идентификатор транзакции в вашей системе
+- **trackerID**: уникальный идентификатор транзакции в нашей стороне
+- **currency**: направление, всегда RUB
+- **status**: статус транзакции (SUCCESS - успешная, PENDING - в ожидании, ERROR - ошибочная)
+- **type**: тип транзакции (выплата - OUT, пополнение - IN)
+- **createdTime**: время создания транзакции
+- **updatedTime**: время обновления транзакции
+- **amount**: сумма транзакции
+- **commission**: комиссия за транзакцию
+
+  
+
 ### Получение массива транзакций по заданным параметрам (GET)
 ```http
 GET /api/v1/account/transactions?limit=5&page=1&type=IN HTTP/1.1
@@ -322,9 +467,10 @@ Signature: 4216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
     "transactions": [
       {
         "clientID": "1wswssxfxxf22qqffs",
-        "type": "IN",
-        "ticker": "RUB",
-        "status": "ERROR",
+	"trackerID": "8fd63cc6614279942e15075cc6eb0ad05d430c242a750b140db1446f7749f8e1",
+        "type": "OUT",
+        "currency": "RUB",
+        "status": "SUCCESS",
         "createdTime": "2024-05-15T23:55:43.035172Z",
         "updatedTime": "2024-05-16T03:17:37.331142+03:00",
         "amount": "6802",
@@ -332,9 +478,10 @@ Signature: 4216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
       },
       {
         "clientID": "b122cckaaoz87",
+	"trackerID": "813hbeo32279942e15075cc6eb0ad05d430c242a750b140db1446f774wj3",
         "type": "IN",
-        "ticker": "RUB",
-        "status": "ERROR",
+        "currency": "RUB",
+        "status": "SUCCESS",
         "createdTime": "2024-05-14T23:44:57.286611Z",
         "updatedTime": "2024-05-15T02:47:54.904398+03:00",
         "amount": "600",
@@ -342,9 +489,10 @@ Signature: 4216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
       },
       {
         "clientID": "yeahbzoz87",
-        "type": "IN",
-        "ticker": "RUB",
-        "status": "ERROR",
+	"trackerID": "ojdsan435k9942e15075cc6eb0ad05d430c242a750b140db14123n934naq",
+        "type": "OUT",
+        "currency": "RUB",
+        "status": "PENDING",
         "createdTime": "2024-05-14T23:09:37.694018Z",
         "updatedTime": "2024-05-15T02:09:37.694018+03:00",
         "amount": "600",
@@ -352,8 +500,9 @@ Signature: 4216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
       },
       {
         "clientID": "ortndc81",
+	"trackerID": "bzx3k1qedak614279942e15075cc6eb0ad05d430c242a750b140db1412mmxcvl1",
         "type": "IN",
-        "ticker": "RUB",
+        "currency": "RUB",
         "status": "ERROR",
         "createdTime": "2024-05-09T01:31:50.858344Z",
         "updatedTime": "2024-05-09T04:32:12.894818+03:00",
@@ -362,9 +511,10 @@ Signature: 4216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
       },
       {
         "clientID": "ijm1sibsib221ad",
+	"trackerID": "zlp23ommf45k9942e15075cc6eb0ad05d430c242a750b140db141qsmc03",
         "type": "IN",
-        "ticker": "RUB",
-        "status": "ERROR",
+        "currency": "RUB",
+        "status": "SUCCESS",
         "createdTime": "2024-05-27T00:15:59.562019Z",
         "updatedTime": "2024-05-27T03:25:46.861819+03:00",
         "amount": "502",
@@ -376,14 +526,15 @@ Signature: 4216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 }
 ```
 Струтура transactions:
+- **clientID**: уникальный идентификатор транзакции в вашей системе
+- **trackerID**: уникальный идентификатор транзакции в нашей стороне
 - **currency**: направление, всегда RUB
 - **status**: статус транзакции (SUCCESS - успешная, PENDING - в ожидании, ERROR - ошибочная)
 - **type**: тип транзакции (выплата - OUT, пополнение - IN)
-- **clientID**: уникальный id транзакции в вашей системе
 - **createdTime**: время создания транзакции
 - **updatedTime**: время обновления транзакции
 - **amount**: сумма транзакции
-- **commission**: rкомиссия за транзакцию
+- **commission**: комиссия за транзакцию
 - **pages**: количество страниц с транзакциями
 
   
