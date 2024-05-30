@@ -10,13 +10,38 @@
 
 ### Генерация Подписи
 
-Подпись генерируется с использованием алгоритма HMAC-SHA512. Ниже приведена пример функции генерирования подписи (Signature) на Go:
+Подпись генерируется с использованием алгоритма HMAC-SHA512. Ниже приведена пример функции генерирования подписи (Signature) на разных языках:
 
 ```go
 func GenerateSignature(secret string, message string) string {
     mac := hmac.New(sha512.New, []byte(secret))
     mac.Write([]byte(message))
     return hex.EncodeToString(mac.Sum(nil))
+}
+```
+
+```python
+import hmac
+import hashlib
+
+def generate_signature(secret, message):
+    mac = hmac.new(secret.encode(), message.encode(), hashlib.sha512)
+    return mac.hexdigest()
+```
+
+```javaScript
+const crypto = require('crypto');
+
+function generateSignature(secret, message) {
+    return crypto.createHmac('sha512', secret)
+                 .update(message)
+                 .digest('hex');
+}
+```
+
+```php
+function generate_signature($secret, $message) {
+    return hash_hmac('sha512', $message, $secret);
 }
 ```
 
@@ -27,10 +52,14 @@ func GenerateSignature(secret string, message string) string {
 - **GET Запрос**: Сообщение составляется из URL и закодированных параметров запроса.
 - **POST Запрос**: Сообщение включает URL и JSON тело запроса.
 
-#### Пример кода на Go для формирования сообщения:
+#### Примеры кода на разных языках для формирования сообщения:
+- **exp**: время жизни запроса в формате UNIX, которое вы вставляетя в заголовок"Expires" (о заголовках можете прочитать ниже)
+- **secret**: приватный ключ (PrivateKey), переданный вам поддержкой Pay Finity
+- **body**: тело запроса, в случае GET оно пустое (nil/null), обязательно чтобы JSON ключи шли в алфавитном порядке!!!
+#### <span style="color:red"> *Обязательно JSON ключи в теле (body) запроса должны идти в алфавитном порядке!!!* </span>
 
 ```go
-func generateSign(r *resty.Request, body []byte, exp, secret string) (string, error) {
+func generateMessage(r *resty.Request, body []byte, exp, secret string) (string, error) {
 	message := r.URL
 	if r.Method == http.MethodGet {
 		message += r.QueryParam.Encode()
@@ -49,14 +78,61 @@ func generateSign(r *resty.Request, body []byte, exp, secret string) (string, er
 			message += string(jsonBody)
 		}
 	}
-
 	return GenerateSignature(secret, message+exp), nil
 }
 ```
-- **exp**: время жизни запроса в формате UNIX, которое вы вставляетя в заголовок"Expires" (о заголовках можете прочитать ниже)
-- **secret**: приватный ключ (PrivateKey), переданный вам поддержкой Pay Finity
-- **body**: тело запроса, в случае GET оно пустое (nil/null), обязательно чтобы JSON ключи шли в алфавитном порядке!!!
-#### <span style="color:red"> *Обязательно JSON ключи в теле (body) запроса должны идти в алфавитном порядке!!!* </span>
+
+```python
+import json
+from urllib.parse import urlencode
+
+def generate_message(request, body, exp, secret):
+    message = request.url
+    if request.method == 'GET':
+        message += urlencode(request.params)
+    else:
+        if body:
+            data = json.loads(body)
+            json_body = json.dumps(data, sort_keys=True)
+            message += json_body
+    return generate_signature(secret, message + exp)
+```
+
+```javaScript
+function generateMessage(request, body, exp, secret) {
+    let message = request.url;
+    if (request.method === 'GET') {
+        message += new URLSearchParams(request.params).toString();
+    } else {
+        if (body) {
+            const data = JSON.parse(body);
+            const sortedKeys = Object.keys(data).sort();
+            const sortedData = {};
+            sortedKeys.forEach(key => sortedData[key] = data[key]);
+            const jsonBody = JSON.stringify(sortedData);
+            message += jsonBody;
+        }
+    }
+    return generateSignature(secret, message + exp);
+}
+```
+
+```php
+function generate_message($request, $body, $exp, $secret) {
+    $message = $request['url'];
+    if ($request['method'] == 'GET') {
+        $message .= http_build_query($request['params']);
+    } else {
+        if ($body) {
+            $data = json_decode($body, true);
+            ksort($data);
+            $json_body = json_encode($data);
+            $message .= $json_body;
+        }
+    }
+    return generate_signature($secret, $message . $exp);
+}
+```
 
 ### Примеры
 
