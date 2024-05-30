@@ -186,7 +186,7 @@ Signature: 3336894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 
 ## Коды ошибок
 
-| Код ошибки | Сообщение                               | HTTP статус коды |
+| Код ошибки | Сообщение                               | HTTP статус код |
 |------------|----------------------------------------|------------------|
 | 10000      | unauthorized                           | 401              |
 | 20000      | wrong input                            | 400              |
@@ -228,5 +228,163 @@ Signature: 3336894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 | 60014      | bank doesnt exists                     | 400              |
 
 
+## API запросы
 
+### Получение актуального баланса (GET)
+```http
+GET /api/v1/account/balance HTTP/1.1
+Host: pay-finity.com
+Content-Type: application/json
+Expires: 1717025135
+Public-Key: testPublicKey
+Signature: 2216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490cfc8ff180e7575c5dbbc643ab3842ca05ae8bbb9f08e57c58cab748f8677
+```
+#### Пример успешного ответа
+```json
+{
+  "success": true,
+  "data": {
+    "balance": [
+      {
+        "currency": "RUB",    
+        "available": "985.95",
+        "frozen": "100.21"
+      }
+    ]
+  }
+}
+```
+Струтура balance:
+- **currency**: направление, всегда RUB
+- **available**: доступный баланс
+- **frozen**: замороженный баланс
+
+
+### Получение актуальных ставок (GET)
+```http
+GET /api/v1/account/commission HTTP/1.1
+Host: pay-finity.com
+Content-Type: application/json
+Expires: 1717025144
+Public-Key: testPublicKey
+Signature: 4216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490cfc8ff180e7575c5dbbc643ab3842ca05ae8bbb9f08e57c58cab748f8677
+```
+#### Пример успешного ответа
+```json
+{
+  "success": true,
+  "data": {
+    "rates": [
+      {
+        "currency": "RUB",
+        "minAmount": "50",
+        "maxAmount": "12000000",
+        "percentCommissionIn": "5",
+        "percentCommissionOut": "5"
+      }
+    ]
+  }
+}
+```
+Струтура rates:
+- **currency**: направление, всегда RUB
+- **minAmount**: минимальная сумма для пополнения/выплаты
+- **maxAmount**: максимальная сумма для пополнения/выплаты
+- **percentCommissionIn**: процентная комиссия на пополнения
+- **percentCommissionOut**: процентная комиссия на выплату
+
+### Получение массива транзакций по заданным параметрам (GET)
+```http
+GET /api/v1/account/transactions?limit=5&page=1&type=IN HTTP/1.1
+Host: pay-finity.com
+Content-Type: application/json
+Expires: 1717025144
+Public-Key: testPublicKey
+Signature: 4216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490cfc8ff180e7575c5dbbc643ab3842ca05ae8bbb9f08e57c58cab748f8677
+```
+#### Возможные параметры, по которым можно фильтровать транзакции
+- **limit**: количество транзакций, которые вы хотите получить (обязательный)
+- **page**: номер страницы, с которой вы хотите получить транзакции (обязательный)
+- **currency**: направление, всегда RUB (необязательный)
+- **status**: статус транзакции (SUCCESS - успешная, PENDING - в ожидании, ERROR - ошибочная) (необязательный)
+- **type**: тип транзакции (выплата - OUT, пополнение - IN) (необязательный)
+- **clientID**: уникальный id транзакции в вашей системе (необязательный)
+- **amountMin**: минимальная сумма (необязательный)
+- **amountMax**: максимальная сумма (необязательный)
+- **dateFrom**: с какого времени (необязательный)
+- **dateTo**: до какого времени (необязательный)
+
+#### Пример успешного ответа
+```json
+{
+  "success": true,
+  "data": {
+    "transactions": [
+      {
+        "clientID": "1wswssxfxxf22qqffs",
+        "type": "IN",
+        "ticker": "RUB",
+        "status": "ERROR",
+        "createdTime": "2024-05-15T23:55:43.035172Z",
+        "updatedTime": "2024-05-16T03:17:37.331142+03:00",
+        "amount": "6802",
+        "commission": "340.1"
+      },
+      {
+        "clientID": "b122cckaaoz87",
+        "type": "IN",
+        "ticker": "RUB",
+        "status": "ERROR",
+        "createdTime": "2024-05-14T23:44:57.286611Z",
+        "updatedTime": "2024-05-15T02:47:54.904398+03:00",
+        "amount": "600",
+        "commission": "30"
+      },
+      {
+        "clientID": "yeahbzoz87",
+        "type": "IN",
+        "ticker": "RUB",
+        "status": "ERROR",
+        "createdTime": "2024-05-14T23:09:37.694018Z",
+        "updatedTime": "2024-05-15T02:09:37.694018+03:00",
+        "amount": "600",
+        "commission": "30"
+      },
+      {
+        "clientID": "ortndc81",
+        "type": "IN",
+        "ticker": "RUB",
+        "status": "ERROR",
+        "createdTime": "2024-05-09T01:31:50.858344Z",
+        "updatedTime": "2024-05-09T04:32:12.894818+03:00",
+        "amount": "1000",
+        "commission": "35"
+      },
+      {
+        "clientID": "ijm1sibsib221ad",
+        "type": "IN",
+        "ticker": "RUB",
+        "status": "ERROR",
+        "createdTime": "2024-05-27T00:15:59.562019Z",
+        "updatedTime": "2024-05-27T03:25:46.861819+03:00",
+        "amount": "502",
+        "commission": "25.1"
+      }
+    ],
+    "pages": 1
+  }
+}
+```
+Струтура transactions:
+- **currency**: направление, всегда RUB
+- **status**: статус транзакции (SUCCESS - успешная, PENDING - в ожидании, ERROR - ошибочная)
+- **type**: тип транзакции (выплата - OUT, пополнение - IN)
+- **clientID**: уникальный id транзакции в вашей системе
+- **createdTime**: время создания транзакции
+- **updatedTime**: время обновления транзакции
+- **amount**: сумма транзакции
+- **commission**: rкомиссия за транзакцию
+- **pages**: количество страниц с транзакциями
+
+  
 Мы надеемся, что эта документация поможет вам интегрироваться с API Pay-Finity. Если у вас есть вопросы, пожалуйста, свяжитесь с нашей службой поддержки.
