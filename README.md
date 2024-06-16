@@ -237,13 +237,18 @@ Signature: 3336894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 {
   "success": true,
   "data": {
-    "balance": [
-      {
+    "balance": {
+      "payment": {
         "currency": "RUB",
-        "available": "985.95",
-        "frozen": "100.21"
+        "available": "7002.95",
+        "frozen": "4500.47"
+      },
+      "payout": {
+        "currency": "RUB",
+        "available": "10000.23",
+        "frozen": "7801.68"
       }
-    ]
+    }
   }
 }
 ```
@@ -327,18 +332,25 @@ Signature: 2216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 {
   "success": true,
   "data": {
-    "balance": [
-      {
-        "currency": "RUB",    
-        "available": "985.95",
-        "frozen": "100.21"
+    "balance": {
+      "payment": {
+        "currency": "RUB",
+        "available": "8355.95",
+        "frozen": "570"
+      },
+      "payout": {
+        "currency": "RUB",
+        "available": "0",
+        "frozen": "0"
       }
-    ]
+    }
   }
 }
 ```
 Струтура balance:
 - **currency**: направление, всегда RUB
+- **payment**: депозитный баланс
+- **payout**: выплатной баланс
 - **available**: доступный баланс
 - **frozen**: замороженный баланс
 
