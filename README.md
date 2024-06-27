@@ -406,7 +406,7 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
   "callbackURL": "https://test.com/test1",
   "description": "test payment",
   "amount": "1000",
-  "type": "CARD
+  "type": "CARD"
 }
 ```
 
