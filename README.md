@@ -405,7 +405,8 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
   "currency": "RUB",
   "callbackURL": "https://test.com/test1",
   "description": "test payment",
-  "amount": "1000"
+  "amount": "1000",
+  "type": "CARD
 }
 ```
 
@@ -415,6 +416,7 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 - **amount**: сумма транзакции  (обязательный)
 - **callbackURL**: ваш URL, на который будет приходить оповещение об изменении статуса транзакции (необязательный)
 - **description**: описание транзакции (необязательный)
+- **type**: тип пополнений (необязательный, по дефолту CARD), возможные значения CARD - перевод по карте и SBP - перевод через СБП
 
 #### Пример успешного ответа
 ```json
