@@ -10,41 +10,13 @@
 
 ### Генерация Подписи
 
-Подпись генерируется с использованием алгоритма HMAC-SHA512. Ниже приведена пример функции генерирования подписи (Signature) на разных языках:
+Подпись генерируется с использованием алгоритма HMAC-SHA512. Ниже приведена пример функции генерирования подписи (Signature):
 #### Golang
 ```go
 func GenerateSignature(secret string, message string) string {
     mac := hmac.New(sha512.New, []byte(secret))
     mac.Write([]byte(message))
     return hex.EncodeToString(mac.Sum(nil))
-}
-```
-
-#### Python
-```python
-import hmac
-import hashlib
-
-def generate_signature(secret, message):
-    mac = hmac.new(secret.encode(), message.encode(), hashlib.sha512)
-    return mac.hexdigest()
-```
-
-#### JavaScript
-```javaScript
-const crypto = require('crypto');
-
-function generateSignature(secret, message) {
-    return crypto.createHmac('sha512', secret)
-                 .update(message)
-                 .digest('hex');
-}
-```
-
-#### PHP
-```php
-function generate_signature($secret, $message) {
-    return hash_hmac('sha512', $message, $secret);
 }
 ```
 
