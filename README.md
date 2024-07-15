@@ -58,61 +58,6 @@ func generateMessage(r *resty.Request, body []byte, exp, secret string) (string,
 }
 ```
 
-#### Python
-```python
-import json
-from urllib.parse import urlencode
-
-def generate_message(request, body, exp, secret):
-    message = request.url
-    if request.method == 'GET':
-        message += urlencode(request.params)
-    else:
-        if body:
-            data = json.loads(body)
-            json_body = json.dumps(data, sort_keys=True)
-            message += json_body
-    return generate_signature(secret, message + exp)
-```
-
-#### JavaScript
-```javaScript
-function generateMessage(request, body, exp, secret) {
-    let message = request.url;
-    if (request.method === 'GET') {
-        message += new URLSearchParams(request.params).toString();
-    } else {
-        if (body) {
-            const data = JSON.parse(body);
-            const sortedKeys = Object.keys(data).sort();
-            const sortedData = {};
-            sortedKeys.forEach(key => sortedData[key] = data[key]);
-            const jsonBody = JSON.stringify(sortedData);
-            message += jsonBody;
-        }
-    }
-    return generateSignature(secret, message + exp);
-}
-```
-
-#### PHP
-```php
-function generate_message($request, $body, $exp, $secret) {
-    $message = $request['url'];
-    if ($request['method'] == 'GET') {
-        $message .= http_build_query($request['params']);
-    } else {
-        if ($body) {
-            $data = json_decode($body, true);
-            ksort($data);
-            $json_body = json_encode($data);
-            $message .= $json_body;
-        }
-    }
-    return generate_signature($secret, $message . $exp);
-}
-```
-
 ### Примеры
 
 Для GET запроса на `https://pay-finity.com/api/v1/account/transactions?limit=5&page=1`:
