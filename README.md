@@ -30,8 +30,8 @@ func GenerateSignature(secret string, message string) string {
 #### Примеры кода на разных языках для формирования сообщения:
 - **exp**: время жизни запроса в формате UNIX, которое вы вставляетя в заголовок"Expires" (о заголовках можете прочитать ниже)
 - **secret**: приватный ключ (PrivateKey), переданный вам поддержкой Pay Finity
-- **body**: тело запроса, в случае GET оно пустое (nil/null), обязательно чтобы JSON ключи шли в алфавитном порядке!!!
-#### <span style="color:red"> *Обязательно JSON ключи в теле (body) запроса должны идти в алфавитном порядке!!!* </span>
+- **body**: тело запроса, в случае GET оно пустое (nil/null), обязательно чтобы JSON ключи и query параметры шли в алфавитном порядке!!!
+#### <span style="color:red"> *Обязательно JSON ключи в теле (body) и query параметры запроса должны идти в алфавитном порядке!!!* </span>
 
 #### Golang
 ```go
@@ -60,11 +60,12 @@ func generateMessage(r *resty.Request, body []byte, exp, secret string) (string,
 
 ### Примеры
 
-Для GET запроса на `https://pay-finity.com/api/v1/account/transactions?limit=5&page=1`:
+Для GET запроса на `https://pay-finity.com/api/v1/account/transactions?limit=3&page=1&type=IN`:
 
 - **URL**: `/api/v1/account/transactions`
-- **Параметры запроса**: `currency=RUB`
-- **Сообщение - message (для подписи)**: `/api/v1/accountuser_id=123`
+- **Параметры запроса**: `limit=3&page=1&type=IN`
+- **Expires**: `1721585422` - время жизни запроса в формате UNIX по UTC, рекомендуем добавлять к текущему времени 3-5 минут
+- **Сообщение - message (для подписи)**: `/api/v1/account/transactionslimit=3&page=1&type=IN1721585422`
 
 Для POST запроса на `https://pay-finity.com/api/v1/payment` с телом: `
 {
