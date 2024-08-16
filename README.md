@@ -387,7 +387,7 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 
 
 
-### Создание выплаты, используются SBER, TINKOFF, ALL_BANK (POST)
+### Создание выплаты, используются SBER, TINKOFF, ANY_BANK (POST)
 ```http
 POST /api/v1/payout HTTP/1.1
 Host: pay-finity.com
@@ -402,15 +402,17 @@ Signature: nnd5721jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4
   "callbackURL": "http://test.com/test2",
   "description": "test payout",
   "amount": "5500",
-  "receiver": "2200555555555555"
+  "receiver": "2200555555555555",
+  "type": "CARD"
 }
 ```
 
 Струтура тела запроса:
 - **clientID** - уникальный идентификатор транзакции в вашей системе (обязательный)
-- **bank** - банк, на который вы хотите вывести средства, доступны только ALL_BANK, SBER, TINKOFF (обязательный)
+- **bank** - банк, на который вы хотите вывести средства, доступны только ANY_BANK (межбанк), SBER, TINKOFF (обязательный)
 - **amount** - сумма транзакции  (обязательный)
 - **receiver** - номер карты, на которую вы хотите вывести средства (обязательный)
+- **type** - тип выплаты, CARD или SBP (обязательный)
 - **callbackURL** - ваш URL, на который будет приходить оповещение об изменении статуса транзакции (опциональный)
 - **description** - описание транзакции (опциональный)
 
