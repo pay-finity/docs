@@ -273,6 +273,37 @@ Signature: 2216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 - **frozen** - замороженный баланс
 
 
+### Получение активных банков (GET) для передачи на прием/выплаты
+```http
+GET /api/v1/account/banks HTTP/1.1
+Host: pay-finity.com
+Content-Type: application/json
+Expires: 1717025135
+Public-Key: testPublicKey
+Signature: 2216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490cfc8ff180e7575c5dbbc643ab3842ca05ae8bbb9f08e57c58cab748f8677
+```
+#### Пример успешного ответа
+```json
+{
+  "success": true,
+  "data": {
+    "banks": [
+      "SBER",
+      "TINKOFF",
+      "POCHTABANK",
+      "MBANK",
+      "UBRR",
+      "SVOIBANK",
+      "PRIMORYE",
+      "ALFA",
+      "SOVCOM",
+      "HOMEBANK",
+      "ANY_BANK"
+    ]
+  }
+}
+```
+
 
 ### Получение актуальных ставок (GET)
 ```http
@@ -334,7 +365,7 @@ Signature: 4216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 
 
 
-### Создание транзакции по приему, используются все банки (POST)
+### Создание транзакции на прием (POST)
 ```http
 POST /api/v1/payment HTTP/1.1
 Host: pay-finity.com
@@ -344,6 +375,7 @@ Public-Key: testPublicKey
 Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490cfc8ff180e7575c5dbbc643ab3842ca05ae8bbb9f08e180e757lk4nm
 
 {
+  "bank": "ANY_BANK",
   "clientID": "test",
   "currency": "RUB",
   "callbackURL": "https://test.com/test1",
@@ -360,6 +392,7 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 - **callbackURL** - ваш URL, на который будет приходить оповещение об изменении статуса транзакции (опциональный)
 - **description** - описание транзакции (опциональный)
 - **type** - тип пополнений (опциональный, по дефолту CARD), возможные значения CARD - перевод по карте и SBP - перевод через СБП, ACCOUNT - перевод через банковский счет
+- **bank** - название банка, на который хотите совершить перевод средств, по умолчанию если не передавать поле, то используется ANY_BANK (опциональный)
 
 #### Пример успешного ответа
 ```json
