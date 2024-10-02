@@ -301,7 +301,7 @@ Signature: 2216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 - **frozen** - замороженный баланс
 
 
-### Получение активных банков (GET) для передачи на прием/выплаты
+### Получение активных банков для передачи на прием/выплаты (GET)
 ```http
 GET /api/v1/account/banks HTTP/1.1
 Host: pay-finity.com
@@ -337,6 +337,37 @@ Signature: 2216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 }
 ```
 
+### Получение активных валют для передачи на прием/выплаты (GET)
+```http
+GET /api/v1/account/currencies HTTP/1.1
+Host: pay-finity.com
+Content-Type: application/json
+Expires: 1717025135
+Public-Key: testPublicKey
+Signature: 2216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490cfc8ff180e7575c5dbbc643ab3842ca05ae8bbb9f08e57c58cab748f8677
+```
+#### Пример успешного ответа
+```json
+{
+  "success": true,
+  "data": {
+    "currencies": [
+      {
+        "name": "RUB"
+      },
+      {
+        "name": "UZS"
+      },
+      {
+        "name": "TRY"
+      },
+      {
+        "name": "AZN"
+      }
+    ]
+  }
+}
+```
 
 ### Получение актуальных ставок (GET)
 ```http
