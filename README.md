@@ -10,7 +10,7 @@
 
 ### Генерация Подписи
 
-Подпись генерируется с использованием алгоритма HMAC-SHA512. Ниже приведена пример функции генерирования подписи (Signature):
+Подпись генерируется с использованием алгоритма HMAC-SHA512. Ниже приведен пример функции генерирования подписи (Signature):
 #### Golang
 ```go
 func GenerateSignature(secret string, message string) string {
@@ -156,16 +156,30 @@ Signature: 3336894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
   "success": true,
   "data": {
     "balance": {
-      "payment": {
-        "currency": "RUB",
-        "available": "7002.95",
-        "frozen": "4500.47"
-      },
-      "payout": {
-        "currency": "RUB",
-        "available": "10000.23",
-        "frozen": "7801.68"
-      }
+      "payment": [
+        {
+          "currency": "RUB",
+          "available": "844",
+          "frozen": "12000"
+        },
+        {
+          "currency": "UZS",
+          "available": "198999.78",
+          "frozen": "65000"
+        }
+      ],
+      "payout": [
+        {
+          "currency": "RUB",
+          "available": "97930.461",
+          "frozen": "923.05"
+        },
+        {
+          "currency": "UZS",
+          "available": "700000",
+          "frozen": "2000.22"
+        }
+      ]
     }
   }
 }
@@ -238,7 +252,7 @@ Signature: 3336894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 
 ### Получение актуального баланса (GET)
 ```http
-GET /api/v1/account/balance HTTP/1.1
+GET /api/v1/account/balances HTTP/1.1
 Host: pay-finity.com
 Content-Type: application/json
 Expires: 1717025135
@@ -251,22 +265,36 @@ Signature: 2216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
   "success": true,
   "data": {
     "balance": {
-      "payment": {
-        "currency": "RUB",
-        "available": "8355.95",
-        "frozen": "570"
-      },
-      "payout": {
-        "currency": "RUB",
-        "available": "0",
-        "frozen": "0"
-      }
+      "payment": [
+        {
+          "currency": "RUB",
+          "available": "844",
+          "frozen": "12000"
+        },
+        {
+          "currency": "UZS",
+          "available": "198999.78",
+          "frozen": "65000"
+        }
+      ],
+      "payout": [
+        {
+          "currency": "RUB",
+          "available": "97930.461",
+          "frozen": "923.05"
+        },
+        {
+          "currency": "UZS",
+          "available": "700000",
+          "frozen": "2000.22"
+        }
+      ]
     }
   }
 }
 ```
 Струтура balance:
-- **currency** - направление, всегда RUB
+- **currency** - валюта
 - **payment** - депозитный баланс
 - **payout** - выплатной баланс
 - **available** - доступный баланс
@@ -323,31 +351,24 @@ Signature: 4216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
       {
         "bank": "ANY_BANK",
         "currency": "RUB",
-        "percent": "8",
-        "minAmount": "1000",
+        "percent": "10",
+        "minAmount": "5000",
         "maxAmount": "120000"
+      },
+      {
+        "bank": "SBER",
+        "currency": "UZS",
+        "percent": "4.5",
+        "minAmount": "5000",
+        "maxAmount": "100000"
       }
     ],
     "payout": [
       {
-        "bank": "ANY_BANK",
-        "currency": "RUB",
-        "percent": "7",
-        "minAmount": "4000",
-        "maxAmount": "100000"
-      },
-      {
         "bank": "SBER",
         "currency": "RUB",
-        "percent": "6",
-        "minAmount": "3000",
-        "maxAmount": "100000"
-      },
-      {
-        "bank": "SBP",
-        "currency": "RUB",
-        "percent": "5",
-        "minAmount": "3000",
+        "percent": "4.5",
+        "minAmount": "200",
         "maxAmount": "100000"
       }
     ]
@@ -358,7 +379,7 @@ Signature: 4216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 - **payment** - комиссии по приему
 - **payout** - комиссии по выплатам
 - **bank** - банк
-- **currency** - направление, всегда RUB
+- **currency** - валюта
 - **minAmount** - минимальная сумма для пополнения/выплаты
 - **maxAmount** - максимальная сумма для пополнения/выплаты
 - **percent** - процентная комиссия
@@ -387,8 +408,8 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 
 Струтура тела запроса:
 - **clientID** - уникальный идентификатор транзакции в вашей системе (обязательный)
-- **currency** - направление, всегда RUB  (обязательный)
-- **amount** - сумма транзакции  (обязательный)
+- **currency** - валюта: RUB, UZS, AZN, TRY (обязательный)
+- **amount** - сумма транзакции в нативной валюте, например если создаете на 30000.53 UZS, то отправляете 30000.53 (обязательный)
 - **callbackURL** - ваш URL, на который будет приходить оповещение об изменении статуса транзакции (опциональный)
 - **description** - описание транзакции (опциональный)
 - **type** - тип пополнений (опциональный, по дефолту CARD), возможные значения CARD - перевод по карте и SBP - перевод через СБП, ACCOUNT - перевод через банковский счет
@@ -411,7 +432,7 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 ```
 Струтура ответа:
 - **trackerID** - уникальный идентификатор транзакции в нашей стороне
-- **currency** - направление, всегда RUB
+- **currency** - валюта: RUB, UZS, AZN, TRY
 - **cardNumber** - номер карты, на который нужно совершить перевод средств
 - **bank** - банк на который нужно совершить перевод средств
 - **updatedTime** - время обновления транзакции
@@ -434,6 +455,7 @@ Signature: nnd5721jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4
   "bank": "TINKOFF",
   "callbackURL": "http://test.com/test2",
   "description": "test payout",
+  "currency": "RUB",
   "amount": "5500",
   "receiver": "2200555555555555",
   "type": "CARD"
@@ -443,7 +465,8 @@ Signature: nnd5721jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4
 Струтура тела запроса:
 - **clientID** - уникальный идентификатор транзакции в вашей системе (обязательный)
 - **bank** - банк, на который вы хотите вывести средства, доступны только ANY_BANK (межбанк), SBER, TINKOFF, ... (обязательный)
-- **amount** - сумма транзакции  (обязательный)
+- **amount** - сумма транзакции в нативной валюте, например если создаете на 30000.53 UZS, то отправляете 30000.53 (обязательный)
+- **currency** - валюта: RUB, UZS, AZN, TRY (обязательный)
 - **receiver** - номер карты, на которую вы хотите вывести средства (обязательный)
 - **type** - тип выплаты, CARD или SBP (обязательный)
 - **callbackURL** - ваш URL, на который будет приходить оповещение об изменении статуса транзакции (опциональный)
@@ -464,9 +487,9 @@ Signature: nnd5721jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4
 ```
 Струтура ответа:
 - **trackerID** - уникальный идентификатор транзакции в нашей стороне
-- **currency** - направление, всегда RUB
-- **amount** - сумма выплата с учетом комиссии
-- **commission** - комиссия за выплату
+- **currency** - валюта: RUB, UZS, AZN, TRY
+- **amount** - сумма выплата с учетом комиссии в нативной валюте
+- **commission** - комиссия за выплату в нативной валюте
 - **status** - статус транзакции
 
 
@@ -501,13 +524,13 @@ Signature: 234jjl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490
 Струтура transactions:
 - **clientID** - уникальный идентификатор транзакции в вашей системе
 - **trackerID** - уникальный идентификатор транзакции в нашей стороне
-- **currency** - направление, всегда RUB
+- **currency** - валюта: RUB, UZS, AZN, TRY
 - **status** - статус транзакции (SUCCESS - успешная, PENDING - в ожидании, ERROR - ошибочная)
 - **type** - тип транзакции (выплата - OUT, пополнение - IN)
 - **createdTime** - время создания транзакции
 - **updatedTime** - время обновления транзакции
-- **amount** - сумма транзакции
-- **commission** - комиссия за транзакцию
+- **amount** - сумма транзакции в нативной валюте
+- **commission** - комиссия за транзакцию в нативной валюте
 
   
 
@@ -606,8 +629,8 @@ Signature: 4216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 - **type** - тип транзакции (выплата - OUT, пополнение - IN)
 - **createdTime** - время создания транзакции
 - **updatedTime** - время обновления транзакции
-- **amount** - сумма транзакции
-- **commission** - комиссия за транзакцию
+- **amount** - сумма транзакции в нативной валюте
+- **commission** - комиссия за транзакцию в нативной валюте
 - **pages** - количество страниц с транзакциями
 
 
