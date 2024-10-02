@@ -316,17 +316,22 @@ Signature: 2216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
   "success": true,
   "data": {
     "banks": [
-      "SBER",
-      "TINKOFF",
-      "POCHTABANK",
-      "MBANK",
-      "UBRR",
-      "SVOIBANK",
-      "PRIMORYE",
-      "ALFA",
-      "SOVCOM",
-      "HOMEBANK",
-      "ANY_BANK"
+      {
+        "ticker": "SBER",
+        "currency": "RUB"
+      },
+      {
+        "ticker": "TINKOF",
+        "currency": "RUB"
+      },
+      {
+        "ticker": "ALFA",
+        "currency": "RUB"
+      },
+      {
+        "ticker": "UZ_CARD",
+        "currency": "UZS"
+      },
     ]
   }
 }
