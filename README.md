@@ -460,6 +460,7 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
     "currency": "RUB",
     "amount": "1000",
     "cardNumber": "2200188977146220",
+    "accountNumber": "40817810099910004312",
     "bank": "ALFA",
     "SBPPhoneNumber": "+79963614478",
     "holder": "Ivanov Ivan"
@@ -473,6 +474,7 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 - **bank** - банк на который нужно совершить перевод средств
 - **updatedTime** - время обновления транзакции
 - **SBPPhoneNumber** - номер телефона для перевода средств через СБП
+- **accountNumber** - номер счета для перевода средств через номер счета
 - **holder** - ФИО держателя карты
 
 
