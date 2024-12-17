@@ -78,6 +78,7 @@ func generateMessage(r *resty.Request, body []byte, exp, secret string) (string,
 `:
 
 - **URL**: `/api/v1/payment`
+- **Expires**: `1721585422` - время жизни запроса в формате UNIX по UTC, рекомендуем добавлять к текущему времени 3-5 минут
 - **Тело запроса**: `
 {
   "clientID": "test",
