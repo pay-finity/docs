@@ -423,7 +423,7 @@ Signature: 4216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 
 
 
-### Создание транзакции на прием (POST)
+### Создание транзакции payIn (POST)
 ```http
 POST /api/v1/payment HTTP/1.1
 Host: pay-finity.com
@@ -439,7 +439,8 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
   "callbackURL": "https://test.com/test1",
   "description": "test payment",
   "amount": "1000",
-  "type": "CARD"
+  "type": "CARD",
+  "merchantUserID": "test_user"
 }
 ```
 
@@ -449,8 +450,9 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 - **amount** - сумма транзакции в нативной валюте, например если создаете на 30000.53 UZS, то отправляете 30000.53 (обязательный)
 - **callbackURL** - ваш URL, на который будет приходить оповещение об изменении статуса транзакции (опциональный)
 - **description** - описание транзакции (опциональный)
-- **type** - тип пополнений (опциональный, по дефолту CARD), возможные значения CARD - перевод по карте и SBP - перевод через СБП, ACCOUNT - перевод через банковский счет, CROSSBORDER - трансграничный перевод
+- **type** - тип пополнений (опциональный, по дефолту CARD), возможные значения CARD - перевод по карте и SBP - перевод через СБП, ACCOUNT - перевод через банковский счет, CROSSBORDER_CARD - трансграничный перевод по карте, CROSSBORDER_SBP - трансграничный перевод по СБП, NSPK - НСПК
 - **bank** - название банка, на который хотите совершить перевод средств, по умолчанию если не передавать поле, то используется ANY_BANK (опциональный)
+- **merchantUserID** - id пользователя в системе мерчанта (опциональный)
 
 #### Пример успешного ответа
 ```json
@@ -460,11 +462,14 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
     "trackerID": "23w324nn3754aa7aaa0ffe1fe154a64119bfc2f18804809b7c207d81a2aab27",
     "currency": "RUB",
     "amount": "1000",
+    "commission": "9.9",
     "cardNumber": "2200188977146220",
     "accountNumber": "40817810099910004312",
     "bank": "ALFA",
     "SBPPhoneNumber": "+79963614478",
-    "holder": "Ivanov Ivan"
+    "holder": "Ivanov Ivan",
+    "nspkURL": "https://qr.nspk.ru/AS2A003H1TLHVARJ8TDOM6SQ7MNNTKQB?type=01&bank=100000000052&crc=8144",
+    "country": "Таджикистан"
   }
 }
 ```
@@ -477,10 +482,13 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 - **SBPPhoneNumber** - номер телефона для перевода средств через СБП
 - **accountNumber** - номер счета для перевода средств через номер счета
 - **holder** - ФИО держателя карты
+- **nspkURL** - ссылка для оплаты по методу НСПК
+- **country** - страна для перевода в случае трансграничных методов оплаты
+- **commission** - комиссия в запрошенной валюте
 
 
 
-### Создание выплаты (POST)
+### Создание транзакции payOut (POST)
 ```http
 POST /api/v1/payout HTTP/1.1
 Host: pay-finity.com
@@ -533,7 +541,7 @@ Signature: nnd5721jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4
 
 
 
-### Получение транзакции по trackerID (GET)
+### Получение информации по транзакции по trackerID/clientID (GET)
 ```http
 GET /api/v1/account/transaction?trackerID=8fd63cc6614279942e15075cc6eb0ad05d430c242a750b140db1446f7749f8e1 HTTP/1.1
 Host: pay-finity.com
@@ -542,6 +550,10 @@ Expires: 1717025201
 Public-Key: testPublicKey
 Signature: 234jjl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490cfc8ff180e7575c5dbbc643ab3842ca05ae8bbb9f08e180e7575c5dba2
 ```
+
+Возможные параметры запроса:
+- **clientID** - уникальный идентификатор транзакции в вашей системе (опциональный)
+- **trackerID** - уникальный идентификатор транзакции в нашей стороне (опциональный)
 
 #### Пример успешного ответа
 ```json
@@ -556,7 +568,9 @@ Signature: 234jjl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490
 	"createdTime": "2024-05-15T23:55:43.035172Z",
 	"updatedTime": "2024-05-16T03:17:37.331142+03:00",
 	"amount": "6802",
-	"commission": "340.1"
+	"commission": "340.1",
+	"holder": "Ivanov Ivan",
+	"receiver": "2200555555555555"
   }
 }
 ```
@@ -570,6 +584,8 @@ Signature: 234jjl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490
 - **updatedTime** - время обновления транзакции
 - **amount** - сумма транзакции в нативной валюте
 - **commission** - комиссия за транзакцию в нативной валюте
+- **holder** - ФИО держателя карты
+- **receiver** - реквизит, на который выводились средства в случае payOut (выплаты)
 
   
 
@@ -609,7 +625,9 @@ Signature: 4216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
         "createdTime": "2024-05-15T23:55:43.035172Z",
         "updatedTime": "2024-05-16T03:17:37.331142+03:00",
         "amount": "6802",
-        "commission": "340.1"
+        "commission": "340.1",
+	"holder": "Ivanov Ivan",
+	"receiver": "2200555555555555"
       },
       {
         "clientID": "b122cckaaoz87",
@@ -620,7 +638,9 @@ Signature: 4216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
         "createdTime": "2024-05-14T23:44:57.286611Z",
         "updatedTime": "2024-05-15T02:47:54.904398+03:00",
         "amount": "600",
-        "commission": "30"
+        "commission": "30",
+	"holder": "Ivanov Ivan",
+	"receiver": "2200555555555555"
       },
       {
         "clientID": "yeahbzoz87",
@@ -631,7 +651,9 @@ Signature: 4216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
         "createdTime": "2024-05-14T23:09:37.694018Z",
         "updatedTime": "2024-05-15T02:09:37.694018+03:00",
         "amount": "600",
-        "commission": "30"
+        "commission": "30",
+	"holder": "Ivanov Sergey",
+	"receiver": "2200555555555500"
       },
       {
         "clientID": "ortndc81",
@@ -642,7 +664,9 @@ Signature: 4216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
         "createdTime": "2024-05-09T01:31:50.858344Z",
         "updatedTime": "2024-05-09T04:32:12.894818+03:00",
         "amount": "1000",
-        "commission": "35"
+        "commission": "35",
+	"holder": "Petrov Ivan",
+	"receiver": "2200555555511555"
       },
       {
         "clientID": "ijm1sibsib221ad",
@@ -653,7 +677,9 @@ Signature: 4216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
         "createdTime": "2024-05-27T00:15:59.562019Z",
         "updatedTime": "2024-05-27T03:25:46.861819+03:00",
         "amount": "502",
-        "commission": "25.1"
+        "commission": "25.1",
+	"holder": "Smolin Nikita",
+	"receiver": "2200355555555555"
       }
     ],
     "pages": 1
@@ -670,6 +696,8 @@ Signature: 4216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 - **updatedTime** - время обновления транзакции
 - **amount** - сумма транзакции в нативной валюте
 - **commission** - комиссия за транзакцию в нативной валюте
+- **holder** - ФИО держателя карты
+- **receiver** - реквизит, на который выводились средства в случае payOut (выплаты)
 - **pages** - количество страниц с транзакциями
 
 
