@@ -61,14 +61,14 @@ func generateMessage(r *resty.Request, body []byte, exp, secret string) (string,
 
 ### Примеры
 
-Для GET запроса на `https://api.payfinity.pro/api/v1/account/transactions?limit=3&page=1&type=IN`:
+Для GET запроса на `https://api.payfinity.pro/v1/account/transactions?limit=3&page=1&type=IN`:
 
-- **URL**: `/api/v1/account/transactions`
+- **URL**: `/v1/account/transactions`
 - **Параметры запроса**: `limit=3&page=1&type=IN`
 - **Expires**: `1721585422` - время жизни запроса в формате UNIX по UTC, рекомендуем добавлять к текущему времени 3-5 минут
-- **Сообщение - message (для подписи)**: `/api/v1/account/transactionslimit=3&page=1&type=IN1721585422`
+- **Сообщение - message (для подписи)**: `/v1/account/transactionslimit=3&page=1&type=IN1721585422`
 
-Для POST запроса на `https://api.payfinity.pro/api/v1/payment` с телом: `
+Для POST запроса на `https://api.payfinity.pro/v1/payment` с телом: `
 {
   "clientID": "test",
   "currency": "RUB",
@@ -78,7 +78,7 @@ func generateMessage(r *resty.Request, body []byte, exp, secret string) (string,
 }
 `:
 
-- **URL**: `/api/v1/payment`
+- **URL**: `/v1/payment`
 - **Expires**: `1721585422` - время жизни запроса в формате UNIX по UTC, рекомендуем добавлять к текущему времени 3-5 минут
 - **Тело запроса**: `
 {
@@ -88,7 +88,7 @@ func generateMessage(r *resty.Request, body []byte, exp, secret string) (string,
   "description": "test",
   "amount": "1000"
 }`
-- **Сообщение - message (для подписи), JSON ключи идут в афавитном порядке**: `/api/v1/payment{"amount":"1000","callbackURL":"https://test.com/test1","clientID":"test","currency":"RUB","description":"test"}1721585422`
+- **Сообщение - message (для подписи), JSON ключи идут в афавитном порядке**: `/v1/payment{"amount":"1000","callbackURL":"https://test.com/test1","clientID":"test","currency":"RUB","description":"test"}1721585422`
 
 ## Заголовки Запросов
 
@@ -115,7 +115,7 @@ Signature: 2816894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 ### GET Запрос
 
 ```http
-GET /api/v1/account/transactions?limit=5&page=1 HTTP/1.1
+GET /v1/account/transactions?limit=5&page=1 HTTP/1.1
 Host: api.payfinity.pro
 Content-Type: application/json
 Expires: 1717025133
@@ -128,7 +128,7 @@ Signature: 2816894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 Ниже приведен пример того, как выполнить POST запрос к API Pay-Finity:
 
 ```http
-POST /api/v1/payment HTTP/1.1
+POST /v1/payment HTTP/1.1
 Host: api.payfinity.pro
 Expires: 1717025134
 Public-Key: testPublicKey
@@ -254,7 +254,7 @@ Signature: 3336894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 
 ### Получение актуального баланса (GET)
 ```http
-GET /api/v1/account/balances HTTP/1.1
+GET /v1/account/balances HTTP/1.1
 Host: api.payfinity.pro
 Content-Type: application/json
 Expires: 1717025135
@@ -292,7 +292,7 @@ Signature: 2216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 
 ### Получение активных банков для передачи на payIn/payOut (GET)
 ```http
-GET /api/v1/account/banks HTTP/1.1
+GET /v1/account/banks HTTP/1.1
 Host: api.payfinity.pro
 Content-Type: application/json
 Expires: 1717025135
@@ -328,7 +328,7 @@ Signature: 2216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 
 ### Получение активных валют для передачи на прием/выплаты (GET)
 ```http
-GET /api/v1/account/currencies HTTP/1.1
+GET /v1/account/currencies HTTP/1.1
 Host: api.payfinity.pro
 Content-Type: application/json
 Expires: 1717025135
@@ -352,6 +352,12 @@ Signature: 2216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
       },
       {
         "name": "AZN"
+      },
+      {
+        "name": "KZS"
+      },
+      {
+        "name": "TJS"
       }
     ]
   }
@@ -361,7 +367,7 @@ Signature: 2216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 
 ### Создание транзакции payIn (POST)
 ```http
-POST /api/v1/payment HTTP/1.1
+POST /v1/payment HTTP/1.1
 Host: api.payfinity.pro
 Content-Type: application/json
 Expires: 1717025205
@@ -428,7 +434,7 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 
 ### Создание транзакции payOut (POST)
 ```http
-POST /api/v1/payout HTTP/1.1
+POST /v1/payout HTTP/1.1
 Host: api.payfinity.pro
 Content-Type: application/json
 Expires: 1717025207
@@ -484,7 +490,7 @@ Signature: nnd5721jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4
 
 ### Создание апелляции (POST)
 ```http
-POST /api/v1/appeal HTTP/1.1
+POST /v1/appeal HTTP/1.1
 Host: api.payfinity.pro
 Content-Type: application/json
 Expires: 1717025205
@@ -524,7 +530,7 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 НЕ переводите ордер в статус отмены, а выполните повторный запрос, чтобы получить актуальный статус и сумму.
 
 ```http
-GET /api/v1/account/transaction?trackerID=8fd63cc6614279942e15075cc6eb0ad05d430c242a750b140db1446f7749f8e1 HTTP/1.1
+GET /v1/account/transaction?trackerID=8fd63cc6614279942e15075cc6eb0ad05d430c242a750b140db1446f7749f8e1 HTTP/1.1
 Host: api.payfinity.pro
 Content-Type: application/json
 Expires: 1717025201
@@ -574,7 +580,7 @@ Signature: 234jjl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490
 НЕ переводите ордер в статус отмены, а выполните повторный запрос, чтобы получить актуальный статус и сумму.
 
 ```http
-GET /api/v1/account/payout?trackerID=8fd63cc6614279942e15075cc6eb0ad05d430c242a750b140db1446f7749f8e1 HTTP/1.1
+GET /v1/account/payout?trackerID=8fd63cc6614279942e15075cc6eb0ad05d430c242a750b140db1446f7749f8e1 HTTP/1.1
 Host: api.payfinity.pro
 Content-Type: application/json
 Expires: 1717025201
@@ -620,7 +626,7 @@ Signature: 234jjl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490
 
 ### Отмена транзакции по trackerID (POST)
 ```http
-POST /api/v1/account/cancel HTTP/1.1
+POST /v1/account/cancel HTTP/1.1
 Host: api.payfinity.pro
 Content-Type: application/json
 Expires: 1717025201
@@ -647,7 +653,7 @@ Signature: 234jjl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490
 
 ### Подтверждение транзакции по trackerID (POST)
 ```http
-POST /api/v1/account/confirm HTTP/1.1
+POST /v1/account/confirm HTTP/1.1
 Host: api.payfinity.pro
 Content-Type: application/json
 Expires: 1717025201
