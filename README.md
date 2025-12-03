@@ -383,7 +383,10 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
   "amount": "1000",
   "type": "CARD",
   "merchantUserID": "test_user",
-  "merchantUserIP": "192.168.1.1"
+  "merchantUserIP": "192.168.1.1",
+  "firstName": "John",
+  "lastName": "Milton",
+  "tcid": "12345678901"
 }
 ```
 
@@ -397,6 +400,9 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 - **bank** - наименование банка, на который хотите совершить перевод средств, по умолчанию если не передавать поле, то используется ANY_BANK (опциональный)
 - **merchantUserID** - id конечного пользователя (обязательный)
 - **merchantUserIP** - IP конечного пользователя (оцпиональный)
+- **firstName** - имя (обязательный только для TRY)
+- **lastName** - фамилия (обязательный только для TRY)
+- **tcid** - Turkish Identification Number (обязательный только для TRY)
 
 #### Пример успешного ответа
 ```json
@@ -696,7 +702,10 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
   "merchantUserID": "3411",
   "failedRedirectURL": "https://www.google.com",
   "successRedirectURL": "https://www.google.com",
-  "callbackURL": "https://webhook.test.com/d87ec1f2151f"
+  "callbackURL": "https://webhook.test.com/d87ec1f2151f",
+  "firstName": "John",
+  "lastName": "Milton",
+  "tcid": "12345678901"
 }
 ```
 
@@ -711,6 +720,9 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 - **failedRedirectURL** - ссылка для редиректа в случае ошибки
 - **successRedirectURL** - ссылка для редиректа в случае успеха
 - **merchantUserIP** - IP конечного пользователя (оцпиональный)
+- **firstName** - имя (обязательный только для TRY)
+- **lastName** - фамилия (обязательный только для TRY)
+- **tcid** - Turkish Identification Number (обязательный только для TRY)
 
 #### Пример успешного ответа
 ```json
