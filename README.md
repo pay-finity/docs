@@ -457,7 +457,10 @@ Signature: nnd5721jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4
   "receiver": "2200555555555555",
   "type": "CARD",
   "merchantUserID": "test_user",
-  "merchantUserIP": "192.168.1.1"
+  "merchantUserIP": "192.168.1.1",
+  "firstName": "John",
+  "lastName": "Doe",
+  "tcid": "123321423582"
 }
 ```
 
@@ -467,11 +470,14 @@ Signature: nnd5721jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4
 - **amount** - сумма транзакции в нативной валюте, например если создаете на 30000.53 UZS, то отправляете 30000.53 (обязательный)
 - **currency** - валюта: RUB, UZS, AZN, TRY (обязательный)
 - **receiver** - номер карты, на которую вы хотите вывести средства (обязательный)
-- **type** - тип выплаты, CARD, SBP, ACCOUNT (обязательный)
+- **type** - тип выплаты, CARD, SBP, ACCOUNT, IBAN, PAPARA_ACCOUNT (обязательный)
 - **callbackURL** - ваш URL, на который будет приходить оповещение об изменении статуса транзакции (опциональный)
 - **description** - описание транзакции (опциональный)
 - **merchantUserID** - id конечного пользователя (обязательный)
-- **merchantUserIP** - IP конечного пользователя (оцпиональный)
+- **merchantUserIP** - IP конечного пользователя (опциональный)
+- **firstName** - имя получателя (опциональный)
+- **lastName** - фамилия получателя (опциональный)
+- **tcid** - Turkish Identification Number (обязательный только для TRY)
 
 #### Пример успешного ответа
 ```json
