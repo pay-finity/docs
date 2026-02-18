@@ -386,7 +386,14 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
   "merchantUserIP": "192.168.1.1",
   "firstName": "John",
   "lastName": "Milton",
-  "tcid": "12345678901"
+  "tcid": "12345678901",
+  "card": {
+	  "pan": "4004241010524322",
+	  "year": "2045",
+	  "month": "11",
+	  "cvv": "912",
+	  "holder": "Dustin Poirier"
+  }
 }
 ```
 
@@ -396,13 +403,19 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 - **amount** - сумма транзакции в нативной валюте, например если создаете на 30000.53 UZS, то отправляете 30000.53 (обязательный)
 - **callbackURL** - ваш URL, на который будет приходить оповещение об изменении статуса транзакции (опциональный)
 - **description** - описание транзакции (опциональный)
-- **type** - тип пополнений (опциональный, по дефолту CARD), возможные значения CARD - перевод по карте и SBP - перевод через СБП, ACCOUNT - перевод через банковский счет, CROSSBORDER_CARD - трансграничный перевод по карте, CROSSBORDER_SBP - трансграничный перевод по СБП, NSPK - НСПК, UPI - переводы через UPI (только INR), IMPS - переводы по IMPS (только INR) 
+- **type** - тип пополнений (опциональный, по дефолту CARD), возможные значения CARD - перевод по карте и SBP - перевод через СБП, ACCOUNT - перевод через банковский счет, CROSSBORDER_CARD - трансграничный перевод по карте, CROSSBORDER_SBP - трансграничный перевод по СБП, NSPK - НСПК, UPI - переводы через UPI (только INR), IMPS - переводы по IMPS (только INR), ECOM - перевод по ECOM
 - **bank** - наименование банка, на который хотите совершить перевод средств, по умолчанию если не передавать поле, то используется ANY_BANK (опциональный)
 - **merchantUserID** - id конечного пользователя (обязательный)
 - **merchantUserIP** - IP конечного пользователя (оцпиональный)
 - **firstName** - имя (обязательный только для TRY)
 - **lastName** - фамилия (обязательный только для TRY)
 - **tcid** - Turkish Identification Number (обязательный только для TRY)
+- **card** - данные банковской карты (обязательно для ECOM)
+	- **pan** — номер банковской карты (PAN)
+ 	- **year** — год окончания срока действия карты в формате `YYYY`
+  	- **month** — месяц окончания срока действия карты в формате `MM`
+	- **cvv** — CVV / CVC код карты
+	- **holder** — держатель карты
 
 #### Пример успешного ответа
 ```json
@@ -419,7 +432,8 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
     "SBPPhoneNumber": "+79963614478",
     "holder": "Ivanov Ivan",
     "nspkURL": "https://qr.nspk.ru/AS2A003H1TLHVARJ8TDOM6SQ7MNNTKQB?type=01&bank=100000000052&crc=8144",
-    "country": "Таджикистан"
+    "country": "Таджикистан",
+	"paymentURL": "https://acs5.sbrf.ru:443/ncs_03/acs/pareq/05_0321d90c9450d44214a3a6d35e2854a0b4?MD=6c6cb5e6-35df-7137-9f57-f1d90238457c&PaReq=eJxVUttuwjA2%2FRXUSXsrubRNCzOZ2GCXhwIaoEl7C60Z3Ub40hbovn4Jl10iRfKxnWP7OHC9X3%2B0tqjLrMh7DmtTp4V5UqRZ%2Ftpz5rM7N3KuJcxWGnEwxaTWKCHGslSv2MrSnhN2hJci466fKnR9ynw3wgRdEaXLJQp%2FoShzJEz6T%2Fgp4VRImjptDuQMDaNOViqvJKjk8%2BZxJH0eCkqBnCCsUT8OJD0eZq4IfAHk6IZcrVFOF6gvLxgNwquVanCbNQjkEIGkqPNKN1L4HpAzgFp%2FyFVVbbqE7Ha7dmneL1T%2B3tY1EBsD8tvWpLZWabj2WSrjWZ%2FHX0Mvfhvy0dc8GM3mLB4kPB6894DYDEhVhZJT7lFOOy0WdBnr%2BiGQgx%2FU2jYhAx4chjwi2Ngi%2FX%2Bhvy4w6muznPMcZwS43xQ5mgwj6Y8N5Lfn2wcrbFIZrTqhYCKKPEabl%2BJ5eTd%2FakbNsD8eT%2B%2BFlfuQZBkzIxEP2ZHSAiCWhpw2SU6fwFj%2FPsc3WiO%2B0Q%3D%3D&TermUrl=https%3A%2F%2Fpay.masterprocessing.ru%2Fpayment%2Ffinish_3ds",
   }
 }
 ```
@@ -433,6 +447,7 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 - **accountNumber** - номер счета для перевода средств через номер счета
 - **holder** - ФИО держателя карты
 - **nspkURL** - ссылка для оплаты по методу НСПК
+- **paymentURL** - ссылка, на которую необходимо отправить POST-запрос, после чего произойдёт перенаправление на форму 3-D Secure
 - **country** - страна для перевода в случае трансграничных методов оплаты
 - **commission** - комиссия в запрошенной валюте 0, после перевода в успех в запросе на получении информации по заявке будет актуальная информация
 
@@ -724,7 +739,7 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 - **currency** - валюта: RUB, UZS, AZN, TRY (обязательный)
 - **amount** - сумма транзакции в нативной валюте, например если создаете на 30000.53 UZS, то отправляете 30000.53 (обязательный)
 - **callbackURL** - ваш URL, на который будет приходить оповещение об изменении статуса транзакции (опциональный)
-- **type** - тип пополнений (опциональный, по дефолту CARD), возможные значения CARD - перевод по карте и SBP - перевод через СБП, ACCOUNT - перевод через банковский счет, CROSSBORDER_CARD - трансграничный перевод по карте, CROSSBORDER_SBP - трансграничный перевод по СБП, NSPK - НСПК
+- **type** - тип пополнений (опциональный, по дефолту CARD), возможные значения CARD - перевод по карте и SBP - перевод через СБП, ACCOUNT - перевод через банковский счет, CROSSBORDER_CARD - трансграничный перевод по карте, CROSSBORDER_SBP - трансграничный перевод по СБП, NSPK - НСПК, ECOM - перевод по ECOM
 - **allowedBanks** - массив наименований банков (обязательный)
 - **merchantUserID** - id конечного пользователя (обязательный)
 - **failedRedirectURL** - ссылка для редиректа в случае ошибки
