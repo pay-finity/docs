@@ -393,7 +393,11 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 	  "month": "11",
 	  "cvv": "912",
 	  "holder": "Dustin Poirier"
-  }
+  },
+  "registeredAt": 1719937021,
+  "userAgent": "Mozilla/5.0...",
+  "fingerprint": "fbb77b9f4265b18538e66cac5a37c6410dc2cdd7f0cddfde6eda25aa10df669b",
+  "merchantURL": "https://merchant-url.com",
 }
 ```
 
@@ -416,6 +420,10 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
   	- **month** — месяц окончания срока действия карты в формате `MM`
 	- **cvv** — CVV / CVC код карты
 	- **holder** — держатель карты
+- **registeredAt** — время регистрации пользователя в вашей системе в формате Unix timestamp (опциональный)
+- **fingerprint** — уникальный цифровой отпечаток устройства пользователя (browser/device fingerprint), используется для antifraud-проверок (опциональный)
+- **merchantURL** — URL сайта или сервиса мерчанта, с которого был инициирован платёж (опциональный)
+- **userAgent** — строка User-Agent браузера или клиента пользователя, с которого был выполнен запрос (опциональный)
 
 #### Пример успешного ответа
 ```json
@@ -730,7 +738,11 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
   "callbackURL": "https://webhook.test.com/d87ec1f2151f",
   "firstName": "John",
   "lastName": "Milton",
-  "tcid": "12345678901"
+  "tcid": "12345678901",
+  "registeredAt": 1719937021,
+  "userAgent": "Mozilla/5.0...",
+  "fingerprint": "fbb77b9f4265b18538e66cac5a37c6410dc2cdd7f0cddfde6eda25aa10df669b",
+  "merchantURL": "https://merchant-url.com",
 }
 ```
 
@@ -748,6 +760,10 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 - **firstName** - имя (обязательный только для TRY)
 - **lastName** - фамилия (обязательный только для TRY)
 - **tcid** - Turkish Identification Number (обязательный только для TRY)
+- **registeredAt** — время регистрации пользователя в вашей системе в формате Unix timestamp (опциональный)
+- **fingerprint** — уникальный цифровой отпечаток устройства пользователя (browser/device fingerprint), используется для antifraud-проверок (опциональный)
+- **merchantURL** — URL сайта мерчанта, с которого был инициирован платёж (опциональный)
+- **userAgent** — строка User-Agent браузера или клиента пользователя, с которого был выполнен запрос (опциональный)
 
 #### Пример успешного ответа
 ```json
