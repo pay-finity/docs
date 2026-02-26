@@ -5,6 +5,28 @@
 Добро пожаловать в документацию по API **Pay-Finity**. Наш API позволяет вам программно взаимодействовать с нашими сервисами, что обеспечивает бесшовную интеграцию с вашими приложениями.
 Базовый URL для отправки запросов = https://api.payfinity.pro
 
+## Разделы
+
+1. [Аутентификация и Подпись](#аутентификация-и-подпись)
+2. [Заголовки Запросов](#заголовки-запросов)
+3. [Выполнение Запроса](#выполнение-запроса)
+4. [Ответ](#ответ)
+5. [Обработка Ошибок](#обработка-ошибок)
+6. [Коды ошибок](#коды-ошибок)
+7. [API запросы](#api-запросы)
+   1. [Получение актуального баланса (GET)](#получение-актуального-баланса-get)
+   2. [Получение активных банков для передачи на payIn/payOut (GET)](#получение-активных-банков-для-передачи-на-payinpayout-get)
+   3. [Получение активных валют для передачи на прием/выплаты (GET)](#получение-активных-валют-для-передачи-на-приемвыплаты-get)
+   4. [Создание транзакции payIn (POST)](#создание-транзакции-payin-post)
+   5. [Создание транзакции payOut (POST)](#создание-транзакции-payout-post)
+   6. [Создание апелляции (POST)](#создание-апелляции-post)
+   7. [Получение информации payIn по trackerID (GET)](#получение-информации-payin-по-trackerid-get)
+   8. [Получение информации payOut по trackerID (GET)](#получение-информации-payout-по-trackerid-get)
+   9. [Отмена транзакции по trackerID (POST)](#отмена-транзакции-по-trackerid-post)
+   10. [Подтверждение транзакции по trackerID (POST)](#подтверждение-транзакции-по-trackerid-post)
+   11. [Создание платежной формы (POST)](#создание-платежной-формы-post)
+8. [Отправка колбэка об изменении статуса транзакции (POST)](#отправка-колбэка-об-изменении-статуса-транзакции-post)
+
 ## Аутентификация и Подпись
 
 Для обеспечения безопасности нашего API все запросы должны быть подписаны с использованием подписи (Signature), сгенерированной с помощью приватного ключа (PrivateKey), который мы предоставляем нашим клиентам. Подпись используется для проверки целостности и подлинности запросов.
@@ -90,6 +112,8 @@ func generateMessage(r *resty.Request, body []byte, exp, secret string) (string,
 }`
 - **Сообщение - message (для подписи), JSON ключи идут в афавитном порядке**: `/v1/payment{"amount":"1000","callbackURL":"https://test.com/test1","clientID":"test","currency":"RUB","description":"test"}1721585422`
 
+[**Вернутся к разделам**](#разделы)
+
 ## Заголовки Запросов
 
 Каждый запрос к API должен включать следующие заголовки:
@@ -107,6 +131,8 @@ Expires: 1717025133
 Public-Key: testPublicKey
 Signature: 2816894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490cfc8ff180e7575c5dbbc643ab3842ca05ae8bbb9f08e57c58cab748f8677
 ```
+
+[**Вернутся к разделам**](#разделы)
 
 ## Выполнение Запроса
 
@@ -142,6 +168,8 @@ Signature: 3336894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
   "amount": "1000"
 }
 ```
+
+[**Вернутся к разделам**](#разделы)
 
 ## Ответ
 
@@ -187,6 +215,8 @@ Signature: 3336894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 }
 ```
 
+[**Вернутся к разделам**](#разделы)
+
 ## Обработка Ошибок
 
 В случае ошибки ответ будет включать:
@@ -206,49 +236,161 @@ Signature: 3336894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 }
 ```
 
+[**Вернутся к разделам**](#разделы)
+
 ## Коды ошибок
 
-| Код ошибки | Сообщение                               | HTTP статус код |
-|------------|----------------------------------------|------------------|
-| 10000      | unauthorized                           | 401              |
-| 20000      | wrong input                            | 400              |
-| 20001      | can't bind body to request model       | 422              |
-| 20002      | can't bind query parameters            | 422              |
-| 20003      | failed to parse key                    | 422              |
-| 20004      | signature header value missing or malformed | 400           |
-| 20005      | public-Key header value missing or malformed | 400         |
-| 20006      | timestamp header value missing or outdated | 400          |
-| 20012      | invalid query params                   | 400              |
-| 20013      | empty receipt                          | 400              |
-| 20014      | large file size                        | 400              |
-| 20015      | conflict                               | 409              |
-| 20016      | empty trackerID                        | 400              |
-| 20200      | token not found                        | 404              |
-| 30000      | forbidden                              | 403              |
-| 30001      | no access to requested session         | 403              |
-| 30002      | requested sessions has expired        | 403              |
-| 30003      | user doesn't exists                   | 403              |
-| 30004      | zero balance                           | 403              |
-| 30005      | not enough balance                     | 402              |
-| 30006      | amount less than min                   | 400              |
-| 30007      | amount greater than max                | 400              |
-| 40000      | internal error                         | 500              |
-| 60000      | ticker doesnt exists                   | 400              |
-| 60001      | ticker type doesnt exists              | 400              |
-| 60002      | invalid status                         | 400              |
-| 60003      | empty Public-Key                       | 401              |
-| 60004      | empty Expires                          | 401              |
-| 60005      | empty Signature                        | 401              |
-| 60006      | invalid Signature                      | 401              |
-| 60007      | request timeout                        | 408              |
-| 60008      | invalid Public-Key                     | 400              |
-| 60009      | empty clientID                         | 400              |
-| 60010      | clientID already exists                | 409              |
-| 60011      | payment doesn't exists                 | 404              |
-| 60012      | payment is finalized                   | 409              |
-| 60013      | type doesnt exists                     | 400              |
-| 60014      | bank doesnt exists                     | 400              |
+| Код ошибки | Сообщение                                            | HTTP статус код |
+| ---------- | ---------------------------------------------------- |-----------------|
+| 10000      | unauthorized                                         | 401             |
+| 20000      | wrong input                                          | 400             |
+| 20001      | can't bind body to request model                     | 422             |
+| 20002      | can't bind query parameters                          | 422             |
+| 20003      | failed to parse key                                  | 422             |
+| 20004      | signature header value missing or malformed          | 400             |
+| 20005      | public-Key header value missing or malformed         | 400             |
+| 20006      | timestamp header value missing or outdated           | 400             |
+| 20012      | invalid query params                                 | 400             |
+| 20013      | empty receipt                                        | 400             |
+| 20014      | large file size                                      | 400             |
+| 20015      | conflict                                             | 409             |
+| 20016      | empty trackerID                                      | 400             |
+| 20200      | token not found                                      | 404             |
+| 30000      | forbidden                                            | 403             |
+| 30001      | no access to requested session                       | 403             |
+| 30002      | requested sessions has expired                       | 403             |
+| 30003      | user doesn't exists                                  | 403             |
+| 30004      | zero balance                                         | 403             |
+| 30005      | not enough balance                                   | 402             |
+| 30006      | amount less than min                                 | 400             |
+| 30007      | amount greater than max                              | 400             |
+| 30008      | ssl is forbidden                                     | 403             |
+| 40000      | internal error                                       | 500             |
+| 60000      | ticker doesnt exists                                 | 400             |
+| 60001      | type doesnt exists                                   | 400             |
+| 60002      | invalid status                                       | 400             |
+| 60003      | empty Public-Key                                     | 401             |
+| 60004      | empty Expires                                        | 401             |
+| 60005      | empty Signature                                      | 401             |
+| 60006      | invalid Signature                                    | 401             |
+| 60007      | request timeout                                      | 408             |
+| 60008      | invalid Public-Key                                   | 400             |
+| 60009      | empty clientID                                       | 400             |
+| 60010      | clientID already exists                              | 409             |
+| 60011      | payment doesn't exists                               | 404             |
+| 60012      | payment is finalized                                 | 409             |
+| 60013      | type doesnt exists                                   | 400             |
+| 60014      | bank doesnt exists                                   | 400             |
+| 60015      | not found                                            | 404             |
+| 60016      | expired                                              | 410             |
+| 60017      | wrong amount                                         | 400             |
+| 60018      | chargeback can't get new status                      | 400             |
+| 60019      | liquidity is empty                                   | 400             |
+| 60020      | invalid terminal ID                                  | 400             |
+| 60021      | terminal ID credentials not found                    | 400             |
+| 60022      | transaction used another terminal                    | 400             |
+| 60023      | this currency is not supported                       | 400             |
+| 60024      | this payment system is not supported                 | 400             |
+| 60025      | processing is failed                                 | 400             |
+| 60026      | fail on processing action                            | 400             |
+| 60027      | refund available only on h2h                         | 400             |
+| 60028      | chargeback available only on h2h                     | 400             |
+| 60029      | you can't change success refund                      | 400             |
+| 60030      | this order was already refunded                      | 400             |
+| 60031      | this order was already chargebacked                  | 400             |
+| 60032      | you can't refund unsuccessful order                  | 400             |
+| 60033      | you can't chargeback unsuccessful order              | 400             |
+| 60034      | refund already in process                            | 400             |
+| 60035      | refund time end                                      | 408             |
+| 60036      | not set engine                                       | 400             |
+| 60037      | engine turned off                                    | 400             |
+| 60038      | order id not set in engine                           | 400             |
+| 60039      | user does not have sufficient funds                  | 400             |
+| 60040      | limit exceeded (blocked)                             | 400             |
+| 60041      | ssl is impossible                                    | 500             |
+| 60042      | wrong ECI                                            | 400             |
+| 60043      | declined by IReq in PARes                            | 400             |
+| 60044      | declined by IReq in VARes                            | 400             |
+| 60045      | DS connection timeout                                | 400             |
+| 60046      | PARes status is not Y                                | 400             |
+| 60047      | VERes status is not U                                | 400             |
+| 60048      | too many attempts                                    | 400             |
+| 60049      | session time limit exceeded                          | 400             |
+| 60050      | 3DS Authentication impossible                        | 400             |
+| 60051      | failed to validate TDS test signature                | 400             |
+| 60052      | TDS isn't possible                                   | 400             |
+| 60053      | wrong merchant                                       | 400             |
+| 60054      | current transaction not found                        | 400             |
+| 60055      | too many card usage                                  | 400             |
+| 60056      | expiry date is invalid                               | 400             |
+| 60057      | error, please contact issuer                         | 400             |
+| 60058      | invalid merchant id/terminal id                      | 400             |
+| 60059      | invalid PAN                                          | 400             |
+| 60060      | security check failed                                | 400             |
+| 60061      | wrong card number                                    | 400             |
+| 60062      | repeat transaction                                   | 400             |
+| 60063      | wrong format on message                              | 400             |
+| 60064      | bank not available                                   | 400             |
+| 60065      | wrong operation                                      | 400             |
+| 60066      | ssl not available without CVC                        | 400             |
+| 60067      | failed by 3DS rule                                   | 400             |
+| 60068      | cannot refund                                        | 400             |
+| 60069      | error by terminal rule                               | 400             |
+| 60070      | duplicate order impossible                           | 400             |
+| 60071      | timeout                                              | 400             |
+| 60072      | county not allowed                                   | 400             |
+| 60073      | invalid CVV2                                         | 400             |
+| 60074      | transaction not allowed                              | 400             |
+| 60075      | bank decline transaction                             | 400             |
+| 60076      | card is not active                                   | 400             |
+| 60077      | operation not allowed                                | 400             |
+| 60078      | card restricted                                      | 400             |
+| 60079      | card blocked                                         | 400             |
+| 60080      | card expired                                         | 400             |
+| 60081      | account is closed                                    | 400             |
+| 60082      | card is stolen                                       | 400             |
+| 60083      | too high risk check                                  | 400             |
+| 60084      | wrong IP                                             | 400             |
+| 60085      | wrong CSC                                            | 400             |
+| 60086      | payment canceled                                     | 400             |
+| 60087      | 3DS failed                                           | 400             |
+| 60088      | SBP request not allowed                              | 400             |
+| 60089      | wrong order status                                   | 400             |
+| 60090      | invalid card                                         | 400             |
+| 60091      | turnover less than limit                             | 400             |
+| 60092      | turnover greater than limit                          | 400             |
+| 60093      | invalid bin                                          | 400             |
+| 60094      | this operation is not configured for you             | 400             |
+| 60095      | transaction count more than limit                    | 400             |
+| 60096      | invalid email                                        | 400             |
+| 60097      | invalid geo                                          | 400             |
+| 60098      | invalid method                                       | 400             |
+| 60099      | invalid phone number                                 | 400             |
+| 60100      | invalid account number                               | 400             |
+| 60101      | invalid billing address                              | 400             |
+| 60102      | invalid blick code                                   | 400             |
+| 60103      | invalid first name                                   | 400             |
+| 60104      | invalid last name                                    | 400             |
+| 60105      | contact support                                      | 400             |
+| 60106      | invalid card holder                                  | 400             |
+| 60107      | appeal error                                         | 400             |
+| 60108      | wrong pin                                            | 400             |
+| 70000      | payment rejected by antifraud                        | 400             |
+| 70001      | declined by anti-fraud rule                          | 400             |
+| 70002      | merchant is blocked                                  | 400             |
+| 70003      | declined by suspicious request                       | 400             |
+| 70004      | user ip is in API blacklist                          | 400             |
+| 70005      | user ip is in Form blacklist                         | 400             |
+| 70006      | user create too many requests (limit exceeded)       | 400             |
+| 70007      | too many requests (user has been added to blacklist) | 429             |
+| 70008      | wrong user agent                                     | 400             |
+| 70009      | primary traffic is not allowed                       | 400             |
+| 70010      | invalid requisites                                   | 400             |
+| 70011      | user card is in blacklist                            | 400             |
+| 70012      | canceled by user                                     | 400             |
+| 70013      | user is blocked                                      | 400             |
 
+[**Вернутся к разделам**](#разделы)
 
 ## API запросы
 
@@ -289,6 +431,8 @@ Signature: 2216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 - **available** - доступный баланс
 - **frozen** - замороженный баланс
 
+[**Вернутся к разделам**](#разделы)
+
 
 ### Получение активных банков для передачи на payIn/payOut (GET)
 ```http
@@ -325,6 +469,7 @@ Signature: 2216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
   }
 }
 ```
+[**Вернутся к разделам**](#разделы)
 
 ### Получение активных валют для передачи на прием/выплаты (GET)
 ```http
@@ -363,6 +508,7 @@ Signature: 2216894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
   }
 }
 ```
+[**Вернутся к разделам**](#разделы)
 
 
 ### Создание транзакции payIn (POST)
@@ -382,11 +528,6 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
   "description": "test payment",
   "amount": "1000",
   "type": "CARD",
-  "merchantUserID": "test_user",
-  "merchantUserIP": "192.168.1.1",
-  "firstName": "John",
-  "lastName": "Milton",
-  "tcid": "12345678901",
   "card": {
 	  "pan": "4004241010524322",
 	  "year": "2045",
@@ -394,9 +535,17 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 	  "cvv": "912",
 	  "holder": "Dustin Poirier"
   },
-  "registeredAt": 1719937021,
-  "userAgent": "Mozilla/5.0...",
-  "fingerprint": "fbb77b9f4265b18538e66cac5a37c6410dc2cdd7f0cddfde6eda25aa10df669b",
+  "payerData": {
+  	  "email": "test@test.com",
+  	  "firstName": "John",
+  	  "lastName": "Doe",
+  	  "tcid": "32470713791",
+  	  "userAgent": "Mozilla/5.0...",
+  	  "fingerprint": "fbb77b9f4265b18538e66cac5a37c6410dc2cdd7f0cddfde6eda25aa10df669b",
+  	  "merchantUserIP" "192.168.1.1",
+  	  "merchantUserID": "test_user",
+  	  "registeredAt": 1719937021
+  },
   "merchantURL": "https://merchant-url.com",
 }
 ```
@@ -409,21 +558,25 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 - **description** - описание транзакции (опциональный)
 - **type** - тип пополнений (опциональный, по дефолту CARD), возможные значения CARD - перевод по карте и SBP - перевод через СБП, ACCOUNT - перевод через банковский счет, CROSSBORDER_CARD - трансграничный перевод по карте, CROSSBORDER_SBP - трансграничный перевод по СБП, NSPK - НСПК, UPI - переводы через UPI (только INR), IMPS - переводы по IMPS (только INR), ECOM - перевод по ECOM
 - **bank** - наименование банка, на который хотите совершить перевод средств, по умолчанию если не передавать поле, то используется ANY_BANK (опциональный)
-- **merchantUserID** - id конечного пользователя (обязательный)
-- **merchantUserIP** - IP конечного пользователя (оцпиональный)
-- **firstName** - имя (обязательный только для TRY)
-- **lastName** - фамилия (обязательный только для TRY)
-- **tcid** - Turkish Identification Number (обязательный только для TRY)
 - **card** - данные банковской карты (обязательно для ECOM)
 	- **pan** — номер банковской карты (PAN)
  	- **year** — год окончания срока действия карты в формате `YYYY`
   	- **month** — месяц окончания срока действия карты в формате `MM`
 	- **cvv** — CVV / CVC код карты
 	- **holder** — держатель карты
-- **registeredAt** — время регистрации пользователя в вашей системе в формате Unix timestamp (опциональный)
-- **fingerprint** — уникальный цифровой отпечаток устройства пользователя (browser/device fingerprint), используется для antifraud-проверок (опциональный)
+- **payerData** - данные о плательщике (обязательный)
+    - **email** - email плательщика (обязательно для ECOM)
+    - **firstName** - имя (обязательный только для TRY и ECOM)
+    - **lastName** - фамилия (обязательный только для TRY и ECOM)
+    - **tcid** - Turkish Identification Number (обязательный только для TRY)
+    - **userAgent** — строка User-Agent браузера или клиента пользователя, с которого был выполнен запрос (опциональный)
+    - **fingerprint** — уникальный цифровой отпечаток устройства пользователя (browser/device fingerprint), используется для antifraud-проверок (опциональный)
+    - **merchantUserIP** - IP конечного пользователя (опциональный)
+    - **merchantUserID** - id конечного пользователя (обязательный)
+    - **registeredAt** — время регистрации пользователя в вашей системе в формате Unix timestamp (опциональный)
 - **merchantURL** — URL сайта или сервиса мерчанта, с которого был инициирован платёж (опциональный)
-- **userAgent** — строка User-Agent браузера или клиента пользователя, с которого был выполнен запрос (опциональный)
+
+[**Вернутся к разделам**](#разделы)
 
 #### Пример успешного ответа
 ```json
@@ -459,7 +612,7 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 - **country** - страна для перевода в случае трансграничных методов оплаты
 - **commission** - комиссия в запрошенной валюте 0, после перевода в успех в запросе на получении информации по заявке будет актуальная информация
 
-
+[**Вернутся к разделам**](#разделы)
 
 ### Создание транзакции payOut (POST)
 ```http
@@ -524,6 +677,7 @@ Signature: nnd5721jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4
 - **commission** - комиссия за выплату в нативной валюте
 - **status** - статус транзакции
 
+[**Вернутся к разделам**](#разделы)
 
 ### Создание апелляции (POST)
 ```http
@@ -559,6 +713,8 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
   }
 }
 ```
+
+[**Вернутся к разделам**](#разделы)
 
 
 ### Получение информации payIn по trackerID (GET)
@@ -610,6 +766,7 @@ Signature: 234jjl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490
 - **holder** - ФИО держателя карты
 - **receiver** - реквизит, на который выводились средства в случае payOut (выплаты)
 
+[**Вернутся к разделам**](#разделы)
 
 ### Получение информации payOut по trackerID (GET)
 **⚠️ ВАЖНО:**  
@@ -660,6 +817,7 @@ Signature: 234jjl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490
 - **holder** - ФИО держателя карты
 - **receiver** - реквизит, на который выводились средства в случае payOut (выплаты)
 
+[**Вернутся к разделам**](#разделы)
 
 ### Отмена транзакции по trackerID (POST)
 ```http
@@ -687,6 +845,8 @@ Signature: 234jjl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490
   }
 }
 ```
+
+[**Вернутся к разделам**](#разделы)
 
 ### Подтверждение транзакции по trackerID (POST)
 ```http
@@ -717,6 +877,8 @@ Signature: 234jjl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490
 }
 ```
 
+[**Вернутся к разделам**](#разделы)
+
 ### Создание платежной формы (POST)
 ```http
 POST /v1/payform HTTP/1.1
@@ -732,16 +894,20 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
   "currency":"RUB",
   "clientID": "test123",
   "allowedBanks":["ANY_BANK"],
-  "merchantUserID": "3411",
   "failedRedirectURL": "https://www.google.com",
   "successRedirectURL": "https://www.google.com",
   "callbackURL": "https://webhook.test.com/d87ec1f2151f",
-  "firstName": "John",
-  "lastName": "Milton",
-  "tcid": "12345678901",
-  "registeredAt": 1719937021,
-  "userAgent": "Mozilla/5.0...",
-  "fingerprint": "fbb77b9f4265b18538e66cac5a37c6410dc2cdd7f0cddfde6eda25aa10df669b",
+  "payerData": {
+  	  "email": "test@test.com",
+  	  "firstName": "John",
+  	  "lastName": "Doe",
+  	  "tcid": "32470713791",
+  	  "userAgent": "Mozilla/5.0...",
+  	  "fingerprint": "fbb77b9f4265b18538e66cac5a37c6410dc2cdd7f0cddfde6eda25aa10df669b",
+  	  "merchantUserIP" "192.168.1.1",
+  	  "merchantUserID": "test_user",
+  	  "registeredAt": 1719937021
+  },
   "merchantURL": "https://merchant-url.com",
 }
 ```
@@ -753,17 +919,19 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 - **callbackURL** - ваш URL, на который будет приходить оповещение об изменении статуса транзакции (опциональный)
 - **type** - тип пополнений (опциональный, по дефолту CARD), возможные значения CARD - перевод по карте и SBP - перевод через СБП, ACCOUNT - перевод через банковский счет, CROSSBORDER_CARD - трансграничный перевод по карте, CROSSBORDER_SBP - трансграничный перевод по СБП, NSPK - НСПК, ECOM - перевод по ECOM
 - **allowedBanks** - массив наименований банков (обязательный)
-- **merchantUserID** - id конечного пользователя (обязательный)
 - **failedRedirectURL** - ссылка для редиректа в случае ошибки
 - **successRedirectURL** - ссылка для редиректа в случае успеха
-- **merchantUserIP** - IP конечного пользователя (оцпиональный)
-- **firstName** - имя (обязательный только для TRY)
-- **lastName** - фамилия (обязательный только для TRY)
-- **tcid** - Turkish Identification Number (обязательный только для TRY)
-- **registeredAt** — время регистрации пользователя в вашей системе в формате Unix timestamp (опциональный)
-- **fingerprint** — уникальный цифровой отпечаток устройства пользователя (browser/device fingerprint), используется для antifraud-проверок (опциональный)
+- **payerData** - данные о плательщике (обязательный)
+	- **email** - email плательщика (опциональный)
+	- **firstName** - имя (обязательный только для TRY)
+	- **lastName** - фамилия (обязательный только для TRY)
+	- **tcid** - Turkish Identification Number (обязательный только для TRY)
+	- **userAgent** — строка User-Agent браузера или клиента пользователя, с которого был выполнен запрос (опциональный)
+	- **fingerprint** — уникальный цифровой отпечаток устройства пользователя (browser/device fingerprint), используется для antifraud-проверок (опциональный)
+	- **merchantUserIP** - IP конечного пользователя (опциональный)
+	- **merchantUserID** - id конечного пользователя (обязательный)
+	- **registeredAt** — время регистрации пользователя в вашей системе в формате Unix timestamp (опциональный)
 - **merchantURL** — URL сайта мерчанта, с которого был инициирован платёж (опциональный)
-- **userAgent** — строка User-Agent браузера или клиента пользователя, с которого был выполнен запрос (опциональный)
 
 #### Пример успешного ответа
 ```json
@@ -781,6 +949,7 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 - **status** - статус
 - **url** - ссылка на платежную форму
 
+[**Вернутся к разделам**](#разделы)
 
 ## Отправка колбэка об изменении статуса транзакции (POST)
 На указанный Вами callbcakURL, при изменении статуса транзакции будет отправлен POST запрос с trackerID, по которому вы можете получить информацию о своей транзакции, отправив запрос на получение информации по транзакции. Пример тела запроса колбэка:
@@ -789,5 +958,6 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
   "trackerID": "8fd63cc6614279942e15075cc6eb0ad05d430c242a750b140db1446f7749f8e1",
 }
 ```
+[**Вернутся к разделам**](#разделы)
   
 *Мы надеемся, что эта документация поможет вам интегрироваться с API Pay-Finity. Если у вас есть вопросы, пожалуйста, свяжитесь с нашей службой поддержки.*
