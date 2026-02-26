@@ -241,7 +241,7 @@ Signature: 3336894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 ## Коды ошибок
 
 | Код ошибки | Сообщение                                            | HTTP статус код |
-| ---------- | ---------------------------------------------------- |-----------------|
+| ---------- | ---------------------------------------------------- | --------------- |
 | 10000      | unauthorized                                         | 401             |
 | 20000      | wrong input                                          | 400             |
 | 20001      | can't bind body to request model                     | 422             |
@@ -285,7 +285,7 @@ Signature: 3336894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 | 60016      | expired                                              | 410             |
 | 60017      | wrong amount                                         | 400             |
 | 60018      | chargeback can't get new status                      | 400             |
-| 60019      | liquidity is empty                                   | 400             |
+| 60019      | liquidity is empty                                   | —               |
 | 60020      | invalid terminal ID                                  | 400             |
 | 60021      | terminal ID credentials not found                    | 400             |
 | 60022      | transaction used another terminal                    | 400             |
@@ -375,6 +375,11 @@ Signature: 3336894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 | 60106      | invalid card holder                                  | 400             |
 | 60107      | appeal error                                         | 400             |
 | 60108      | wrong pin                                            | 400             |
+| 60109      | empty payer data                                     | 400             |
+| 60110      | missing payerData.MerchantUserID                     | 400             |
+| 60111      | missing payerData.firstName                          | 400             |
+| 60112      | missing payerData.lastName                           | 400             |
+| 60113      | missing payerData.Tcid                               | 400             |
 | 70000      | payment rejected by antifraud                        | 400             |
 | 70001      | declined by anti-fraud rule                          | 400             |
 | 70002      | merchant is blocked                                  | 400             |
@@ -389,6 +394,7 @@ Signature: 3336894fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b4490c
 | 70011      | user card is in blacklist                            | 400             |
 | 70012      | canceled by user                                     | 400             |
 | 70013      | user is blocked                                      | 400             |
+
 
 [**Вернутся к разделам**](#разделы)
 
