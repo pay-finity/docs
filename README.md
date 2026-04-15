@@ -554,6 +554,12 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
   	  "merchantUserIP" "192.168.1.1",
   	  "merchantUserID": "test_user",
   	  "registeredAt": 1719937021
+  	  "address": {
+  	    "fullAddress": "123 Wall Street, NY",
+  	    "countryCode": "US",
+  	    "city": "New York",
+  	    "street": "Wall Street",
+  	    "zipCode": "10005"
   },
   "merchantURL": "https://merchant-url.com",
 }
@@ -583,6 +589,12 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
     - **merchantUserIP** - IP конечного пользователя (опциональный)
     - **merchantUserID** - id конечного пользователя (обязательный)
     - **registeredAt** — время регистрации пользователя в вашей системе в формате Unix timestamp (опциональный)
+    - **address** - информация об адресе проживания плательщика (опционально)
+      - **fullAddress** - полный адрес плательщика
+      - **countryCode** - код страны плательщика
+      - **city** - название города плательщика
+      - **street** - название улицы плательщика
+      - **zipCode** - почтовый индекс плательщика
 - **merchantURL** — URL сайта или сервиса мерчанта, с которого был инициирован платёж (опциональный)
 
 [**Вернутся к разделам**](#разделы)
@@ -923,7 +935,14 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
   	  "fingerprint": "fbb77b9f4265b18538e66cac5a37c6410dc2cdd7f0cddfde6eda25aa10df669b",
   	  "merchantUserIP" "192.168.1.1",
   	  "merchantUserID": "test_user",
-  	  "registeredAt": 1719937021
+  	  "registeredAt": 1719937021,
+  	  "address": {
+  	    "fullAddress": "123 Wall Street, NY",
+  	    "countryCode": "US",
+  	    "city": "New York",
+  	    "street": "Wall Street",
+  	    "zipCode": "10005"
+  	   }
   },
   "merchantURL": "https://merchant-url.com",
 }
@@ -935,7 +954,7 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 - **amount** - сумма транзакции в нативной валюте, например если создаете на 30000.53 UZS, то отправляете 30000.53 (обязательный)
 - **callbackURL** - ваш URL, на который будет приходить оповещение об изменении статуса транзакции (опциональный)
 - **type** - тип пополнений (опциональный, по дефолту CARD), возможные значения CARD - перевод по карте и SBP - перевод через СБП, ACCOUNT - перевод через банковский счет, CROSSBORDER_CARD - трансграничный перевод по карте, CROSSBORDER_SBP - трансграничный перевод по СБП, NSPK - НСПК, ECOM - перевод по ECOM
-- **allowedBanks** - массив наименований банков (обязательный)
+- **allowedBanks** - массив наименований банков (обязательный для P2P)
 - **failedRedirectURL** - ссылка для редиректа в случае ошибки
 - **successRedirectURL** - ссылка для редиректа в случае успеха
 - **payerData** - данные о плательщике (обязательный)
@@ -948,6 +967,12 @@ Signature: nzxk21jl94fc8ebe05d47e96eca553ee3ca59863ae8d41a25a42d92b71df5e0e95b44
 	- **merchantUserIP** - IP конечного пользователя (опциональный)
 	- **merchantUserID** - id конечного пользователя (обязательный)
 	- **registeredAt** — время регистрации пользователя в вашей системе в формате Unix timestamp (опциональный)
+    - **address** - информация об адресе проживания плательщика (опционально)
+      - **fullAddress** - полный адрес плательщика
+      - **countryCode** - код страны плательщика
+      - **city** - название города плательщика
+      - **street** - название улицы плательщика
+      - **zipCode** - почтовый индекс плательщика
 - **merchantURL** — URL сайта мерчанта, с которого был инициирован платёж (опциональный)
 
 #### Пример успешного ответа
